@@ -1,45 +1,9 @@
-
-Raw file content
-View options
-Skip to content
-Dayana23011
-app-principal
-Repository navigation
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security and quality
-1
- (1)
-Insights
-Settings
-Files
-Go to file
-t
-T
-README.md
-index.html
-app-principal
-/index.html
-Dayana23011
-Dayana23011
-Add files via upload
-33c37a3
- · 
-5 hours ago
-
-Code
-
-Blame
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADMIN - Piscinas</title>
+  <title>Registro de Piscinas</title>
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="theme-color" content="#163a63" />
@@ -615,8 +579,8 @@ Blame
               <th>Días de Visitas</th>
               <th>Valor por visita</th>
               <th>Día basura</th>
-                            <th>Pago Mensual</th>
-                            <th>Notas</th>
+              <th>Pago Mensual</th>
+              <th>Notas</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -826,15 +790,23 @@ Blame
 
     function buildYearlyPayments(){
       const data = {};
+      const empField = fields.empleada.value === "Asmirian" ? "asmirian" : "fabiola";
       yearMonths.forEach(m => {
+        const pagoPiscina = Number($(m + "Piscina").value || 0);
+        const pagoFabiola = Number($(m + "Fabiola").value || 0);
+        const pagoAsmirian = Number($(m + "Asmirian").value || 0);
+        const extras = Number($(m + "Seguro")?.value || 0);
+        const totalEmpleado = Number(empField === "asmirian" ? pagoAsmirian : pagoFabiola) + extras;
+
         data[m] = {
-          piscina: Number($(m + "Piscina").value || 0),
-          fabiola: Number($(m + "Fabiola").value || 0),
-          asmirian: Number($(m + "Asmirian").value || 0),
+          piscina: pagoPiscina,
+          fabiola: pagoFabiola,
+          asmirian: pagoAsmirian,
           ganancia: Number($(m + "Ganancia").value || 0),
-          seguro: Number($(m + "Seguro")?.value || 0),
+          seguro: extras,
           extra: Number((((buildMonths()||{})[m]||{}).extra) || 0),
           fecha: $(m + "Fecha")?.value || "",
+          total: totalEmpleado,
           nota: ""
         };
       });
@@ -948,8 +920,8 @@ Blame
       }
       await setDoc(doc(db, "piscinas", record.id), record);
       createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
-    resetForm();
-    loadCierreMes();
+      resetForm();
+      loadCierreMes();
     }
 
     function editRecord(id){
@@ -973,7 +945,6 @@ Blame
         if(editingId === id) resetForm();
       }
     }
-
 
     function openPaymentModal(){
       loadYearlyPaymentsToModal((registros.find(x => x.id === editingId) || {}).yearlyPayments || buildYearlyPayments());
@@ -1060,7 +1031,7 @@ Blame
       $("paymentModal").close();
     }
 
-        function showYearlyPaymentSummary(id){
+    function showYearlyPaymentSummary(id){
       const r = registros.find(x => x.id === id);
       if(!r) return;
       editingId = id;
@@ -1082,19 +1053,17 @@ Blame
         const segLbl = document.querySelector('label[for="' + m + 'Seguro"]');
         const fecLbl = document.querySelector('label[for="' + m + 'Fecha"]');
 
-        // Hide fields that should not appear
         if(piscina) piscina.style.display = "none";
         if(piscinaLbl) piscinaLbl.style.display = "none";
         if(gan) gan.style.display = "none";
         if(ganLbl) ganLbl.style.display = "none";
 
-        // Show Extras + Fecha de Pago
         if(seg) seg.style.display = "";
         if(segLbl) { segLbl.style.display = ""; segLbl.textContent = "Extras"; }
+
         if(fec) fec.style.display = "";
         if(fecLbl) { fecLbl.style.display = ""; fecLbl.textContent = "Fecha de Pago"; }
 
-        // Show only corresponding employee payment
         if(r.empleada === "Fabiola"){
           if(fab) fab.style.display = "";
           if(fabLbl) { fabLbl.style.display = ""; fabLbl.textContent = "Pago Fabiola"; }
@@ -1207,7 +1176,6 @@ Blame
       URL.revokeObjectURL(a.href);
     }
 
-
     const CIERRE_KEY = "dayana_cierre_pago_mes";
 
     function getCierreStore(){
@@ -1294,9 +1262,8 @@ Blame
           <td>${escapeHtml(r.diasVisitas || "-")}</td>
           <td>${money(r.valorVisita)}</td>
           <td>${escapeHtml(r.basura || "-")}</td>
-          
           <td><button class="secondary" onclick="window.showMonthSummary('${r.id}')">Detalle de Pago</button></td>
-          <td><button class="secondary" onclick="window.showYearlyPaymentSummary('${r.id}')">${r.empleada === 'Fabiola' ? 'Pago Fabiola' : 'Pago Asmirian'}</button><!--REMOVED--></td>
+          <td><button class="secondary" onclick="window.showYearlyPaymentSummary('${r.id}')">${r.empleada === 'Fabiola' ? 'Pago Fabiola' : 'Pago Asmirian'}</button></td>
           <td><button class="secondary" onclick="window.editNotes('${r.id}')">Agregar notas</button></td>
           <td>
             <div class="mini-actions">
@@ -1324,7 +1291,7 @@ Blame
     $("savePaymentBtn").addEventListener("click", savePaymentDetails);
     $("closePaymentBtn").addEventListener("click", () => $("paymentModal").close());
     $("saveBtn").addEventListener("click", saveRecord);
-    
+
     $("saveMonthBtn").addEventListener("click", saveMonthDetails);
     $("closeMonthBtn").addEventListener("click", () => $("monthModal").close());
     $("clearBtn").addEventListener("click", resetForm);
@@ -1334,7 +1301,7 @@ Blame
     $("mesResumen")?.addEventListener("change", renderResumenMes);
     $("mesCierre")?.addEventListener("change", loadCierreMes);
     $("guardarCierreBtn")?.addEventListener("click", saveCierreMes);
-    const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
+    const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);}
     $("exportBtn").addEventListener("click", exportData);
     $("saveModalBtn").addEventListener("click", saveModalEdit);
     $("closeModalBtn").addEventListener("click", () => {
@@ -1369,4 +1336,3 @@ Blame
   </script>
 </body>
 </html>
- 
