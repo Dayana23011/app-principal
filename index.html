@@ -1033,6 +1033,7 @@
 
     function showYearlyPaymentSummary(id, empleada){
   const r = registros.find(x => x.id === id);
+  empleada = r.empleada;
   if(!r) return;
   editingId = id;
   loadYearlyPaymentsToModal(r.yearlyPayments || {});
