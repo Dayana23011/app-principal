@@ -1031,7 +1031,7 @@
       $("paymentModal").close();
     }
 
-    function showYearlyPaymentSummary(id){
+    function showYearlyPaymentSummary(id, empleada){
   const r = registros.find(x => x.id === id);
   if(!r) return;
   editingId = id;
@@ -1063,7 +1063,7 @@
     if(fec) fec.style.display = "";
     if(fecLbl) { fecLbl.style.display = ""; fecLbl.textContent = "Fecha de Pago"; }
 
-    if(r.empleada === "Fabiola"){
+    if(empleada === "Fabiola"){
       if(fab) fab.style.display = "";
       if(fabLbl) { fabLbl.style.display = ""; fabLbl.textContent = "Pago Fabiola"; }
       if(asm) asm.style.display = "none";
@@ -1076,7 +1076,7 @@
     }
 
     const current = buildYearlyPayments()[m] || {};
-    const total = Number(current[r.empleada === "Asmirian" ? "asmirian" : "fabiola"] || 0) + Number(current.seguro || 0);
+    const total = Number(current[empleada === "Asmirian" ? "asmirian" : "fabiola"] || 0) + Number(current.seguro || 0);
     const totalEl = $(m + "TotalGeneral");
     if(totalEl) totalEl.textContent = money(total);
   });
@@ -1262,7 +1262,7 @@
           <td>${money(r.valorVisita)}</td>
           <td>${escapeHtml(r.basura || "-")}</td>
           <td><button class="secondary" onclick="window.showMonthSummary('${r.id}')">Detalle de Pago</button></td>
-          <td><button class="secondary" onclick="window.showYearlyPaymentSummary('${r.id}')">${r.empleada === 'Fabiola' ? 'Pago Fabiola' : 'Pago Asmirian'}</button></td>
+          <td><button class="secondary" onclick="window.showYearlyPaymentSummary('${r.id}', '${r.empleada}')">${r.empleada === 'Fabiola' ? 'Pago Fabiola' : 'Pago Asmirian'}</button></td>
           <td><button class="secondary" onclick="window.editNotes('${r.id}')">Agregar notas</button></td>
           <td>
             <div class="mini-actions">
