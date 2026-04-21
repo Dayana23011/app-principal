@@ -833,7 +833,7 @@
     }
 
     function loadYearlyPaymentsToModal(yearlyPayments = {}){
-      createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
+      createYearPaymentCards();
       yearMonths.forEach(m => {
         const item = yearlyPayments[m] || {};
         $(m + "Piscina").value = item.piscina ?? "";
