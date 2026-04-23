@@ -12,61 +12,67 @@ body{
   margin:0;
   padding:20px;
 }
-button{
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  background:#1e5ea8;
-  color:white;
-}
-input{
-  width:100%;
-  padding:8px;
-  margin:5px 0;
+h2{
+  text-align:center;
 }
 .card{
   background:white;
   padding:15px;
-  border-radius:12px;
+  border-radius:15px;
   margin-bottom:15px;
+}
+input{
+  width:100%;
+  padding:8px;
+  margin:6px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+button{
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border:none;
+  border-radius:10px;
+  background:#1e5ea8;
+  color:white;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Cierre de Pago</h2>
+<h2>💧 Cierre de Pago</h2>
 
 <div class="card">
 <h3>Fabiola</h3>
-<input id="pagoFabiola" placeholder="Pago">
-<input id="extraFabiola" placeholder="Extras">
-<input id="descFabiola" placeholder="Descuento">
-<input id="totalFabiola" placeholder="Total">
-<input id="fechaFabiola" type="date">
+<input id="pagoF" placeholder="Pago">
+<input id="extraF" placeholder="Extras">
+<input id="descF" placeholder="Descuento">
+<input id="totalF" placeholder="Total a pagar">
+<input id="fechaF" type="date">
 
-<button onclick="openRecibo('Fabiola')">🧾 Comprobante</button>
+<button onclick="abrir('Fabiola')">🧾 Comprobante</button>
 </div>
 
 <div class="card">
 <h3>Asmirian</h3>
-<input id="pagoAsmirian" placeholder="Pago">
-<input id="extraAsmirian" placeholder="Extras">
-<input id="descAsmirian" placeholder="Descuento">
-<input id="totalAsmirian" placeholder="Total">
-<input id="fechaAsmirian" type="date">
+<input id="pagoA" placeholder="Pago">
+<input id="extraA" placeholder="Extras">
+<input id="descA" placeholder="Descuento">
+<input id="totalA" placeholder="Total a pagar">
+<input id="fechaA" type="date">
 
-<button onclick="openRecibo('Asmirian')">🧾 Comprobante</button>
+<button onclick="abrir('Asmirian')">🧾 Comprobante</button>
 </div>
 
-<!-- MODAL -->
 <dialog id="modal">
 
 <div id="recibo" style="
 background:white;
 padding:20px;
 border-radius:20px;
-max-width:400px;
+max-width:420px;
 margin:auto;
 ">
 
@@ -86,7 +92,7 @@ COMPROBANTE DE PAGO
 
 <p style="text-align:center;">Gracias</p>
 
-<button onclick="descargar()">📸 Guardar / Compartir</button>
+<button onclick="guardar()">📸 Guardar / Compartir</button>
 <button onclick="modal.close()">Cerrar</button>
 
 </div>
@@ -96,35 +102,42 @@ COMPROBANTE DE PAGO
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-function openRecibo(nombre){
+function abrir(nombre){
 
 let pago,extra,desc,total,fecha;
 
 if(nombre==="Fabiola"){
-  pago=pagoFabiola.value;
-  extra=extraFabiola.value;
-  desc=descFabiola.value;
-  total=totalFabiola.value;
-  fecha=fechaFabiola.value;
+  pago=pagoF.value;
+  extra=extraF.value;
+  desc=descF.value;
+  total=totalF.value;
+  fecha=fechaF.value;
 }else{
-  pago=pagoAsmirian.value;
-  extra=extraAsmirian.value;
-  desc=descAsmirian.value;
-  total=totalAsmirian.value;
-  fecha=fechaAsmirian.value;
+  pago=pagoA.value;
+  extra=extraA.value;
+  desc=descA.value;
+  total=totalA.value;
+  fecha=fechaA.value;
 }
 
-document.getElementById("nombre").innerText=nombre;
-document.getElementById("pago").innerText=pago;
-document.getElementById("extra").innerText=extra;
-document.getElementById("desc").innerText=desc;
-document.getElementById("total").innerText=total;
-document.getElementById("fecha").innerText=fecha;
+nombreSpan = document.getElementById("nombre");
+pagoSpan = document.getElementById("pago");
+extraSpan = document.getElementById("extra");
+descSpan = document.getElementById("desc");
+totalSpan = document.getElementById("total");
+fechaSpan = document.getElementById("fecha");
+
+nombreSpan.innerText = nombre;
+pagoSpan.innerText = pago;
+extraSpan.innerText = extra;
+descSpan.innerText = desc;
+totalSpan.innerText = total;
+fechaSpan.innerText = fecha;
 
 modal.showModal();
 }
 
-function descargar(){
+function guardar(){
 
 html2canvas(document.getElementById("recibo")).then(canvas=>{
   canvas.toBlob(blob=>{
@@ -133,7 +146,7 @@ html2canvas(document.getElementById("recibo")).then(canvas=>{
     if(navigator.share){
       navigator.share({
         files:[file],
-        title:"Comprobante",
+        title:"Comprobante"
       });
     }else{
       const link=document.createElement("a");
