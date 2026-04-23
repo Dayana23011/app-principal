@@ -1,170 +1,1700 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>App Piscinas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Piscinas</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#163a63" />
+  <style>
+    :root{
+      --bg1:#f5f2ee;
+      --bg2:#ece6de;
+      --card:rgba(255,255,255,.82);
+      --line:#ddd4c8;
+      --text:#243142;
+      --muted:#6f7b88;
+      --accent:#163a63;
+      --accent2:#295d8f;
+      --ok:#2f7d57;
+      --warn:#9a6b10;
+      --danger:#b04a4a;
+      --shadow:0 18px 45px rgba(44,52,64,.12);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;font-family:Inter,Segoe UI,Arial,sans-serif;color:var(--text);}
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.65) 0%, transparent 28%),
+        radial-gradient(circle at top right, rgba(255,255,255,.35) 0%, transparent 25%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+      -webkit-font-smoothing:antialiased;
+      padding-bottom:32px;
+    }
+
+    .wrap{
+      max-width:1280px;
+      margin:0 auto;
+      padding:max(16px, env(safe-area-inset-top)) 14px 18px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg, #12365f, #1e5ea8);
+      color:white;
+      border-radius:34px;
+      padding:24px 18px 26px;
+      box-shadow:0 24px 50px rgba(23,39,56,.22);
+      position:relative;
+      overflow:hidden;
+      margin-bottom:18px;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-80px;
+      top:-80px;
+      width:240px;
+      height:240px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+    }
+
+    .hero h1{
+      margin:0;
+      font-size:clamp(1.8rem,4vw,3rem);
+      letter-spacing:.3px;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      justify-content:center;
+      font-family:Georgia,serif;
+      font-weight:600;
+    }
+
+    .app-mark{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      background:rgba(255,255,255,.16);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.18);
+      font-size:1.05em;
+      animation:spinIn 1s ease-out both, floatGlow 3.2s ease-in-out 1.05s infinite, markSway 3s ease-in-out 1.3s infinite;
+      transform-origin:center;
+    }
+
+    .subtitle{
+      text-align:center;
+      margin-top:12px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.88);
+      font-size:1rem;
+    }
+
+    .dayana-name{
+      display:inline-block;
+      animation:dayanaBloom 1.9s cubic-bezier(.2,.8,.2,1) .15s both, nameFloat 3.2s ease-in-out 2s infinite;
+      font-weight:700;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.99);
+      position:relative;
+      font-size:1.25rem;
+      font-family:Georgia, "Times New Roman", serif;
+      font-style:italic;
+    }
+
+    .dayana-name::after{
+      content:"";
+      position:absolute;
+      left:-8%;
+      top:0;
+      width:38%;
+      height:100%;
+      background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.65), rgba(255,255,255,0));
+      transform:skewX(-22deg) translateX(-180%);
+      animation:dayanaSweep 1.7s ease-out .45s 1 forwards;
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .top-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    .card{
+      background:var(--card);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,.65);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:26px;
+      animation:fadeUp .55s ease both;
+    }
+
+    .card h2,.card h3{margin:0 0 16px;letter-spacing:.01em;}
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .field.full{grid-column:1/-1}
+    label{display:block;font-size:.92rem;font-weight:700;margin-bottom:7px;}
+
+    input,select,textarea{
+      width:100%;
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:18px;
+      padding:12px 14px;
+      font-size:.98rem;
+      outline:none;
+      transition:.2s ease;
+      color:var(--text);
+    }
+
+    input:focus,select:focus,textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(41,93,143,.12);
+    }
+
+    textarea{min-height:92px;resize:vertical;}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+    button{
+      border:none;border-radius:18px;padding:13px 18px;font-size:.96rem;font-weight:700;
+      cursor:pointer;transition:all .22s ease;
+    }
+    button:hover{transform:translateY(-1px) scale(1.01)}
+    .primary{background:linear-gradient(135deg,#12365f,#1e5ea8); color:#fff; box-shadow:0 14px 28px rgba(18,43,69,.22);}
+    .secondary{background:#fff7f5;color:var(--text); border:1px solid var(--line);}
+    .warning{background:#fbf1dc;color:var(--warn); border:1px solid #ead9b0;}
+    .danger{background:#fff0f0;color:var(--danger); border:1px solid #efcbcb;}
+
+    .mes-inline{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:6px;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+    .stat{
+      padding:18px;
+      border-radius:24px;
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,245,239,.96));
+      border:1px solid var(--line);
+    }
+    .stat .k{font-size:.8rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.08em;}
+    .stat .v{font-size:1.6rem;font-weight:800;}
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:12px;
+      margin:22px 0 14px;
+      align-items:center;
+    }
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:30px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.92);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
+    }
+    table{width:100%;border-collapse:collapse;min-width:1380px;}
+    thead th{
+      position:sticky;top:0;background:#f9f3f1;color:#4c4c4c;text-align:left;
+      padding:14px;font-size:.9rem;border-bottom:1px solid var(--line);white-space:nowrap;
+    }
+    tbody td{padding:14px;border-bottom:1px solid #edf2fc;vertical-align:top;font-size:.96rem;}
+    tbody tr:hover{background:#eefcff; transform:translateY(-1px);}
+    .mini-actions{display:flex;flex-wrap:wrap;gap:8px;}
+    .tag{
+      display:inline-block;padding:6px 10px;border-radius:999px;background:#eef4ff;color:#40608b;
+      font-size:.82rem;font-weight:700;border:1px solid #dbe7ff;
+    }
+    .employee-badge{
+      display:inline-block;padding:7px 11px;border-radius:999px;font-weight:800;font-size:.82rem;
+      background:linear-gradient(135deg,#edf3ff,#f4eeff);border:1px solid #dfe4ff;
+    }
+
+    dialog{
+      border:none;border-radius:24px;width:min(860px, calc(100vw - 24px));
+      box-shadow:0 30px 70px rgba(20,42,80,.28);padding:0;
+    }
+    dialog::backdrop{background:rgba(12,24,47,.45)}
+    .modal-head{
+      padding:18px 22px;background:linear-gradient(135deg,#12365f,#1e5ea8);
+      color:#fff;border-radius:24px 24px 0 0;
+    }
+    .modal-body{padding:20px 22px}
+    .muted{color:var(--muted)}
+    .empty{text-align:center;padding:28px;color:var(--muted);}
+    .foot{margin-top:18px;text-align:center;color:var(--muted);font-size:.9rem;}
+
+    .month-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin-top:12px;
+    }
+    .month-card{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.72);
+      border-radius:20px;
+      padding:14px;
+    }
+    .month-card h4{margin:0 0 10px;font-size:1rem;}
+    .month-card label{font-size:.84rem;margin-bottom:6px;}
+    .month-card input,.month-card textarea{margin-bottom:10px;}
+    .month-summary{margin-top:10px;font-size:.9rem;color:var(--muted);font-weight:700;}
+    .total-mes-highlight{font-size:1.22rem;font-weight:900;font-style:italic;color:#0f4fa8;text-shadow:0 0 12px rgba(15,79,168,.18), 0 0 18px rgba(41,93,143,.12);}
+
+    @keyframes fadeUp { from { opacity:0; transform:translateY(12px);} to {opacity:1; transform:translateY(0);} }
+    @keyframes spinIn { 0% { transform:rotate(-220deg) scale(.72); opacity:0;} 100% { transform:rotate(0deg) scale(1); opacity:1;} }
+    @keyframes floatGlow {
+      0% { transform:translateY(0) scale(1); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 18px rgba(18,43,69,.12); }
+      50% { transform:translateY(-2px) scale(1.03); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 14px 26px rgba(18,43,69,.18); }
+      100% { transform:translateY(0) scale(1); box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 8px 18px rgba(18,43,69,.12); }
+    }
+    @keyframes dayanaBloom {
+      0% { opacity:0; transform:translateY(8px) scale(.96); letter-spacing:.28em; text-shadow:0 0 0 rgba(255,255,255,0); }
+      55% { opacity:1; transform:translateY(0) scale(1.03); letter-spacing:.24em; text-shadow:0 0 18px rgba(255,255,255,.55), 0 0 36px rgba(255,255,255,.22);}
+      100% { opacity:.98; transform:translateY(0) scale(1); letter-spacing:.16em; text-shadow:0 0 8px rgba(255,255,255,.18);}
+    }
+    @keyframes dayanaSweep {
+      from { transform:skewX(-22deg) translateX(-180%); opacity:0; }
+      20% { opacity:1; }
+      to { transform:skewX(-22deg) translateX(420%); opacity:0; }
+    }
+    @keyframes nameFloat {0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+    @keyframes markSway {0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-2px) rotate(4deg)}100%{transform:translateY(0) rotate(0deg)}}
+
+    @media (max-width:980px){
+      .top-grid{grid-template-columns:1fr}
+      .toolbar{grid-template-columns:1fr}
+    }
+    @media (max-width:720px){
+      .wrap{padding:10px}
+      .hero{padding:18px 16px 22px;border-radius:26px}
+      .card{padding:16px;border-radius:22px}
+      .form-grid,.stats{grid-template-columns:1fr}
+      button{width:100%}
+      .actions{display:grid;grid-template-columns:1fr}
+      .toolbar{gap:10px}
+      input,select,textarea{font-size:16px;}
+      .hero h1{font-size:1.45rem; line-height:1.2}
+    }
+  </style>
 
 <style>
-body{
-  font-family: Arial;
-  background:#f5f7fb;
-  margin:0;
-  padding:20px;
+.sms-btn {
+  background: linear-gradient(135deg, #0f5bd8, #1e7bff);
+  color: white;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15,91,216,0.22);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
 }
-
-h2{
-  text-align:center;
-  color:#1e5ea8;
+.sms-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15,91,216,0.28);
+  filter: brightness(1.03);
 }
-
-.card{
-  background:white;
-  padding:15px;
-  border-radius:15px;
-  margin-bottom:15px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+.sms-btn:active {
+  transform: scale(0.98);
 }
-
-input{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:8px;
-  border:1px solid #ccc;
+.sms-btn::after {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(circle, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 55%);
+  opacity: 0;
+  transform: scale(0.2);
+  pointer-events: none;
 }
-
-button{
-  width:100%;
-  padding:12px;
-  margin-top:10px;
-  border:none;
-  border-radius:10px;
-  background:#1e5ea8;
-  color:white;
-  font-size:14px;
+.sms-btn:active::after {
+  animation: smsSpark 0.55s ease-out;
 }
-
-#reciboCard{
-  background:white;
-  padding:25px;
-  border-radius:20px;
-  max-width:420px;
-  margin:auto;
-  text-align:center;
+.sms-icon {
+  font-size: 18px;
+  line-height: 1;
 }
-
-#reciboCard h2{
-  color:#1e5ea8;
-  margin-bottom:10px;
+.sms-container {
+  display:flex;
+  gap:12px;
+  margin-bottom:18px;
+  flex-wrap: wrap;
+}
+@keyframes smsSpark {
+  0% { opacity: 0.95; transform: scale(0.2); }
+  100% { opacity: 0; transform: scale(1.4); }
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<h2>💧 Cierre de Pago</h2>
+<div class="sms-container">
+  <button class="sms-btn" onclick="window.location.href='sms:+14694282123?body=Hola Fabi'">
+    <span class="sms-icon">💬</span><span>Fabiola</span>
+  </button>
 
-<div class="card">
-<h3>Fabiola</h3>
-<input id="pagoF" placeholder="Pago">
-<input id="extraF" placeholder="Extras">
-<input id="descF" placeholder="Descuento">
-<input id="totalF" placeholder="Total a pagar">
-<input id="fechaF" type="date">
-
-<button onclick="abrirRecibo('Fabiola')">🧾 Ver Comprobante</button>
+  <button class="sms-btn" onclick="window.location.href='sms:+12147429503?body=Hola Asmirian'">
+    <span class="sms-icon">💬</span><span>Asmirian</span>
+  </button>
 </div>
 
-<div class="card">
-<h3>Asmirian</h3>
-<input id="pagoA" placeholder="Pago">
-<input id="extraA" placeholder="Extras">
-<input id="descA" placeholder="Descuento">
-<input id="totalA" placeholder="Total a pagar">
-<input id="fechaA" type="date">
+  <div class="wrap">
+    <section class="hero">
+      <h1>
+        <span class="app-mark">D</span>
+        <span>Registro de Piscinas</span>
+      </h1>
+      <p class="subtitle"><span class="dayana-name">Dayana</span></p>
+    </section>
 
-<button onclick="abrirRecibo('Asmirian')">🧾 Ver Comprobante</button>
-</div>
+    <div class="top-grid">
+      <section class="card">
+        <h2 id="formTitle">Información de la Piscina</h2>
 
-<dialog id="modal">
+        <div class="form-grid">
+          <div class="field">
+            <label for="empleada">Nombres</label>
+            <select id="empleada">
+              <option>Fabiola</option>
+              <option>Asmirian</option>
+            </select>
+          </div>
 
-<div id="reciboCard">
+          <div class="field">
+            <label for="nombrePiscina">Nombre de Piscina</label>
+            <input id="nombrePiscina" placeholder="Ej. Piscina Residencial Los Pinos" />
+          </div>
 
-<h2>COMPROBANTE DE PAGO</h2>
+          <div class="field full">
+            <label for="direccion">Dirección</label>
+            <input id="direccion" placeholder="Calle, número, colonia, ciudad" />
+          </div>
 
-<h3 id="nombre"></h3>
+          <div class="field">
+            <label for="clave">Clave para Entrar</label>
+            <input id="clave" placeholder="Clave o indicación de acceso" />
+          </div>
 
-<p>💰 Pago: <span id="pago"></span></p>
-<p>✨ Extras: <span id="extra"></span></p>
-<p>➖ Descuento: <span id="desc"></span></p>
+          <div class="field">
+            <label for="inicio">Día de Inicio</label>
+            <input id="inicio" type="date" />
+          </div>
 
-<h3>Total: <span id="total"></span></h3>
+          <div class="field">
+            <label for="cierre">Día de Cierre</label>
+            <input id="cierre" type="date" />
+          </div>
 
-<p>📅 Fecha: <span id="fecha"></span></p>
+          <div class="field">
+            <label for="visitas">Número de Visitas</label>
+            <input id="visitas" type="number" min="0" step="1" placeholder="Ej. 4" />
+          </div>
 
-<p style="margin-top:20px;">Gracias</p>
+          <div class="field">
+            <label for="diasVisitas">Días de Visitas</label>
+            <input id="diasVisitas" placeholder="Ej. Lunes y Jueves" />
+          </div>
 
-<button onclick="guardarImagen()">📸 Guardar / Compartir</button>
-<button onclick="modal.close()">Cerrar</button>
+          <div class="field">
+            <label for="valorVisita">Valor por Visita</label>
+            <input id="valorVisita" type="number" min="0" step="0.01" placeholder="Ej. 350" />
+          </div>
 
-</div>
+          <div class="field">
+            <label for="basura">Día de Sacar la Basura</label>
+            <input id="basura" placeholder="Ej. Martes" />
+          </div>
 
-</dialog>
+          <div class="field">
+            <div class="mes-inline">
+              <label for="pagoMes" style="margin:0;">Detalle de Pago</label>
+              <button type="button" class="primary" id="btnPagoPiscina" style="min-width:190px; font-size:1rem;">Detalle de Pago</button>
+            </div>
+            <input id="pagoMes" type="number" min="0" step="0.01" placeholder="Se calcula automáticamente con extras por mes" />
+          </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+          <div class="field full">
+            <label for="notas">Notas</label>
+            <textarea id="notas" placeholder="Observaciones principales de esta piscina..."></textarea>
+          </div>
+        </div>
 
-<script>
-function abrirRecibo(nombre){
+        <div class="actions">
+          <button class="primary" id="saveBtn">Guardar información</button>
+          <button class="secondary" id="clearBtn">Limpiar</button>
+          <button class="warning" id="cancelEditBtn" style="display:none;">Cancelar edición</button>
+        </div>
+      </section>
 
-let pago,extra,desc,total,fecha;
+      <aside class="card">
+        <h3>Resumen</h3>
+        <div class="stats">
+          <div class="stat">
+            <div class="k">Total de piscinas</div>
+            <div class="v" id="statTotal">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Pago mensual total</div>
+            <div class="v" id="statPago">$0.00</div>
+          </div>
+          <div class="stat">
+            <div class="k">Piscinas de Fabiola</div>
+            <div class="v" id="statFabiola">0</div>
+          </div>
+          <div class="stat">
+            <div class="k">Piscinas de Asmirian</div>
+            <div class="v" id="statAsmirian">0</div>
+          </div>
+        </div>
+      </aside>
 
-if(nombre==="Fabiola"){
-  pago=pagoF.value;
-  extra=extraF.value;
-  desc=descF.value;
-  total=totalF.value;
-  fecha=fechaF.value;
-}else{
-  pago=pagoA.value;
-  extra=extraA.value;
-  desc=descA.value;
-  total=totalA.value;
-  fecha=fechaA.value;
-}
+      <div class="card" style="margin-top:18px;">
+        <h2 style="color:#1e5ea8; margin:0 0 12px; font-size:1.6rem;">📝 Notas Importantes</h2>
+        <textarea id="notasGenerales" placeholder="Escribe aquí tus notas importantes..."
+          style="width:100%; min-height:140px; border-radius:18px; padding:14px; border:1px solid var(--line); font-size:1rem;"></textarea>
+      </div>
 
-document.getElementById("nombre").innerText=nombre;
-document.getElementById("pago").innerText=pago;
-document.getElementById("extra").innerText=extra;
-document.getElementById("desc").innerText=desc;
-document.getElementById("total").innerText=total;
-document.getElementById("fecha").innerText=fecha;
+    </div>
 
-modal.showModal();
-}
+    <section class="card" style="margin-top:18px;">
+      
+<section class="card" style="margin-top:18px;">
+  <h3>💼 Cierre de Pago por Mes</h3>
+  <div class="actions" style="margin-bottom:14px;">
+    <select id="mesCierre" style="max-width:260px;">
+      <option value="enero">Enero</option><option value="febrero">Febrero</option><option value="marzo">Marzo</option>
+      <option value="abril">Abril</option><option value="mayo">Mayo</option><option value="junio">Junio</option>
+      <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
+      <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
+    </select>
+    <button class="primary" id="guardarCierreBtn" type="button">Guardar Cierre</button>
+  </div>
 
-function guardarImagen(){
+  <div class="stats">
+    <div class="stat">
+      <div class="k">Fabiola</div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Total del Mes:</span>
+        <input id="cierreFabiolaTotal" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Extras:</span>
+        <input id="cierreFabiolaExtras" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Descuento Seguro:</span>
+        <input id="cierreFabiolaSeguro" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Total a Depositar:</span>
+        <input id="cierreFabiolaDepositar" style="max-width:120px; text-align:right;">
+      </div>
+      <input id="cierreFabiolaFecha" type="date">
+      <button class="primary" id="reciboFabiolaBtn" type="button" style="margin-top:10px; width:100%;">🧾 Comprobante de Pago</button>
+    </div>
 
-html2canvas(document.getElementById("reciboCard")).then(canvas=>{
-  canvas.toBlob(blob=>{
-    const file=new File([blob],"comprobante.png",{type:"image/png"});
+    <div class="stat">
+      <div class="k">Asmirian</div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Total del Mes:</span>
+        <input id="cierreAsmirianTotal" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Extras:</span>
+        <input id="cierreAsmirianExtras" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Descuento Seguro:</span>
+        <input id="cierreAsmirianSeguro" style="max-width:120px; text-align:right;">
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span>Total a Depositar:</span>
+        <input id="cierreAsmirianDepositar" style="max-width:120px; text-align:right;">
+      </div>
+      <input id="cierreAsmirianFecha" type="date">
+      <button class="primary" id="reciboAsmirianBtn" type="button" style="margin-top:10px; width:100%;">🧾 Comprobante de Pago</button>
+    </div>
+  </div>
+</section>
+<h3>Resumen por Mes</h3>
+      <div class="actions" style="margin-top:0; margin-bottom:14px;">
+        <select id="mesResumen" style="max-width:260px;">
+          <option value="enero">Enero</option>
+          <option value="febrero">Febrero</option>
+          <option value="marzo">Marzo</option>
+          <option value="abril">Abril</option>
+          <option value="mayo">Mayo</option>
+          <option value="junio">Junio</option>
+          <option value="julio">Julio</option>
+          <option value="agosto">Agosto</option>
+          <option value="septiembre">Septiembre</option>
+          <option value="octubre">Octubre</option>
+          <option value="noviembre">Noviembre</option>
+          <option value="diciembre">Diciembre</option>
+        </select>
+      </div>
 
-    if(navigator.share){
-      navigator.share({
-        files:[file],
-        title:"Comprobante"
-      });
-    }else{
-      const link=document.createElement("a");
-      link.href=URL.createObjectURL(blob);
-      link.download="comprobante.png";
-      link.click();
+      <div class="stats">
+        <div class="stat">
+          <div class="k">Fabiola</div>
+          <div class="v" id="resumenFabiola">$0.00</div>
+        </div>
+        <div class="stat">
+          <div class="k">Asmirian</div>
+          <div class="v" id="resumenAsmirian">$0.00</div>
+        </div>
+        <div class="stat" style="grid-column:1/-1;">
+          <div class="k">Total General</div>
+          <div class="v" id="resumenGeneral">$0.00</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="toolbar">
+      <input id="searchInput" placeholder="Buscar por empleada, piscina, dirección o día de basura..." />
+      <select id="filterEmpleado">
+        <option value="">Todas las empleadas</option>
+        <option value="Fabiola">Fabiola</option>
+        <option value="Asmirian">Asmirian</option>
+      </select>
+      <button class="secondary" id="exportBtn">Exportar respaldo</button>
+    </section>
+
+    <section class="card">
+      <h2>Registros Guardados</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Empleada</th>
+              <th>Piscina</th>
+              <th>Dirección</th>
+              <th>Clave</th>
+              <th>Inicio</th>
+              <th>Cierre</th>
+              <th>Visitas</th>
+              <th>Días de Visitas</th>
+              <th>Valor por visita</th>
+              <th>Día basura</th>
+                            <th>Pago Mensual</th>
+                            <th>Notas</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="emptyState" class="empty">Todavía no hay registros guardados.</div>
+    </section>
+
+    <div class="foot">Hecha para Fabiola y Asmirian · Versión elegante de uso privado para control y seguimiento.</div>
+  </div>
+
+
+  <dialog id="paymentModal">
+    <div class="modal-head">
+      <h3 style="margin:0; font-size:1.35rem; color:#ffffff; letter-spacing:.03em;">💵 Pago de la Piscina</h3>
+    </div>
+    <div class="modal-body">
+      <p class="muted" style="margin-top:0;">Aquí puedes editar directamente el pago de esta piscina por mes.</p>
+      <div class="month-grid" id="yearPaymentGrid"></div>
+      <div class="actions" style="margin-top:18px">
+        <button class="primary" id="savePaymentBtn">Guardar pagos</button>
+        <button class="secondary" id="closePaymentBtn">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="monthModal">
+    <div class="modal-head">
+      <h3 style="margin:0;">Detalle por Mes</h3>
+    </div>
+    <div class="modal-body">
+      <p class="muted" style="margin-top:0;">Aquí puedes escribir extras por piscina en cada mes. El total se suma automáticamente a Pago al Mes.</p>
+      <div class="month-grid">
+        <div class="month-card"><h4>Mayo</h4><label for="mayoExtra">Extra</label><input id="mayoExtra" type="number" min="0" step="0.01" placeholder="Ej. 100" /><label for="mayoNota">Detalle</label><textarea id="mayoNota" placeholder="Ej. contaminación, químico extra, visita especial..."></textarea></div>
+        <div class="month-card"><h4>Junio</h4><label for="junioExtra">Extra</label><input id="junioExtra" type="number" min="0" step="0.01" placeholder="Ej. 0" /><label for="junioNota">Detalle</label><textarea id="junioNota"></textarea></div>
+        <div class="month-card"><h4>Julio</h4><label for="julioExtra">Extra</label><input id="julioExtra" type="number" min="0" step="0.01" placeholder="Ej. 0" /><label for="julioNota">Detalle</label><textarea id="julioNota"></textarea></div>
+        <div class="month-card"><h4>Agosto</h4><label for="agostoExtra">Extra</label><input id="agostoExtra" type="number" min="0" step="0.01" placeholder="Ej. 0" /><label for="agostoNota">Detalle</label><textarea id="agostoNota"></textarea></div>
+        <div class="month-card"><h4>Septiembre</h4><label for="septiembreExtra">Extra</label><input id="septiembreExtra" type="number" min="0" step="0.01" placeholder="Ej. 0" /><label for="septiembreNota">Detalle</label><textarea id="septiembreNota"></textarea></div>
+      </div>
+      <div class="month-summary">💵 Total Del Mes: <span id="monthExtrasTotal" class="total-mes-highlight">$0.00</span></div>
+      <div class="actions" style="margin-top:18px">
+        <button class="primary" id="saveMonthBtn">Guardar meses</button>
+        <button class="secondary" id="closeMonthBtn">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="notesModal">
+    <div class="modal-head">
+      <h3 id="modalTitle" style="margin:0;">Editar información</h3>
+    </div>
+    <div class="modal-body">
+      <label for="modalTextarea" id="modalLabel">Contenido</label>
+      <textarea id="modalTextarea" style="min-height:180px;"></textarea>
+      <div class="actions" style="margin-top:18px">
+        <button class="primary" id="saveModalBtn">Guardar</button>
+        <button class="secondary" id="closeModalBtn">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
+
+
+  
+  <dialog id="reciboModal">
+    <div class="modal-body" style="background:rgba(247,249,252,.96); padding:24px;">
+      <div id="reciboCard" style="
+        background:#ffffff;
+        border-radius:28px;
+        max-width:720px;
+        margin:0 auto;
+        box-shadow:0 26px 60px rgba(17,35,72,.18);
+        overflow:hidden;
+        border:1px solid #d8e4f5;
+        position:relative;
+      ">
+        <div style="
+          position:absolute; inset:0; pointer-events:none;
+          background:
+            radial-gradient(circle at top left, rgba(198,220,255,.28), transparent 22%),
+            radial-gradient(circle at bottom right, rgba(198,220,255,.18), transparent 20%);
+        "></div>
+
+        <div style="position:relative; padding:28px 34px 18px;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
+            <div style="color:#2563eb; font-size:14px; line-height:12px; letter-spacing:6px; font-weight:900;">
+              • • • •<br>• • • •<br>• • • •
+            </div>
+
+            <div style="text-align:center; flex:1;">
+              <div style="
+                width:82px; height:82px; margin:0 auto 10px;
+                border-radius:50%;
+                background:linear-gradient(135deg,#0d56d8,#1e5ea8);
+                display:flex; align-items:center; justify-content:center;
+                color:#fff; font-size:38px; font-weight:900;
+                box-shadow:0 10px 22px rgba(30,94,168,.22), inset 0 2px 0 rgba(255,255,255,.22);
+              ">◡</div>
+              <div style="font-size:20px; font-weight:900; color:#183a7a;">App Piscina</div>
+            </div>
+
+            <div style="
+              min-width:150px;
+              background:#fff;
+              border:1px solid #d9e6fb;
+              border-radius:18px;
+              padding:14px 16px;
+              box-shadow:0 8px 18px rgba(16,55,108,.10);
+              color:#2563eb;
+              font-weight:800;
+              font-size:16px;
+              text-align:left;
+            ">🛡️ Pago<br>Confirmado</div>
+          </div>
+
+          <div style="margin:16px auto 0; width:100%; display:flex; align-items:center; gap:14px;">
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+            <div style="color:#6ea0ff; font-size:18px;">✦</div>
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+          </div>
+
+          <div style="text-align:center; margin-top:18px;">
+            <div style="
+              font-size:34px;
+              line-height:1.1;
+              font-weight:900;
+              letter-spacing:.04em;
+              color:#123b85;
+              text-transform:uppercase;
+            ">COMPROBANTE DE PAGO</div>
+          </div>
+
+          <div style="margin:14px auto 0; width:46%; display:flex; align-items:center; gap:14px;">
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+            <div style="color:#6ea0ff; font-size:18px;">✦</div>
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+          </div>
+
+          <div style="text-align:center; margin-top:18px;">
+            <div id="reciboNombre" style="
+              font-family:Georgia, 'Times New Roman', serif;
+              font-size:28px;
+              font-style:italic;
+              font-weight:500;
+              color:#21428a;
+            ">Fabiola</div>
+          </div>
+
+          <div style="text-align:center; margin-top:16px;">
+            <div id="reciboMes" style="
+              display:inline-flex;
+              align-items:center;
+              gap:10px;
+              padding:10px 20px;
+              border-radius:16px;
+              background:#edf4ff;
+              color:#1746a2;
+              font-size:16px;
+              font-weight:900;
+              letter-spacing:.02em;
+            ">📅 MES: ENERO 2026</div>
+          </div>
+
+          <div style="
+            margin:26px auto 0;
+            background:#ffffff;
+            border:1px solid #e6eef9;
+            border-radius:22px;
+            box-shadow:0 8px 22px rgba(17,35,72,.06);
+            padding:14px 22px;
+          ">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:14px 0; border-bottom:1px dashed #dbe6f6;">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:#edf4ff;display:flex;align-items:center;justify-content:center;font-size:28px;">💸</div>
+                <div>
+                  <div style="font-size:18px; font-weight:900; color:#163a63;">PAGO TOTAL</div>
+                  <div style="font-size:14px; color:#64748b;">Pago correspondiente al mes</div>
+                </div>
+              </div>
+              <div id="reciboPagoTotal" style="font-size:22px; font-weight:900; color:#1d4ed8;">$0.00</div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:16px 0; border-bottom:1px dashed #dbe6f6;">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:#e7f6e8;display:flex;align-items:center;justify-content:center;font-size:28px;">🎁</div>
+                <div>
+                  <div style="font-size:18px; font-weight:900; color:#15803d;">EXTRAS</div>
+                  <div style="font-size:14px; color:#64748b;">Pagos adicionales</div>
+                </div>
+              </div>
+              <div id="reciboExtras" style="font-size:22px; font-weight:900; color:#15803d;">$0.00</div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:16px 0;">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:56px;height:56px;border-radius:50%;background:#fde8e8;display:flex;align-items:center;justify-content:center;font-size:28px;">➖</div>
+                <div>
+                  <div style="font-size:18px; font-weight:900; color:#dc2626;">DESCUENTO</div>
+                  <div style="font-size:14px; color:#64748b;">Descuentos aplicados</div>
+                </div>
+              </div>
+              <div id="reciboDescuento" style="font-size:22px; font-weight:900; color:#dc2626;">$0.00</div>
+            </div>
+
+            <div style="
+              margin-top:12px;
+              background:linear-gradient(135deg,#0d56d8,#123b85);
+              border-radius:18px;
+              padding:16px 18px;
+              display:flex;
+              align-items:center;
+              justify-content:space-between;
+              gap:16px;
+              box-shadow:0 12px 24px rgba(13,86,216,.18);
+            ">
+              <div style="display:flex; align-items:center; gap:14px;">
+                <div style="width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;">👛</div>
+                <div>
+                  <div style="font-size:20px; font-weight:900; color:#ffffff;">TOTAL PAGADO</div>
+                  <div style="font-size:14px; color:#dbeafe;">PAGO REALIZADO</div>
+                </div>
+              </div>
+              <div id="reciboTotalPagado" style="font-size:34px; font-weight:900; color:#ffffff; letter-spacing:.01em;">$0.00</div>
+            </div>
+          </div>
+
+          <div style="
+            margin-top:24px;
+            display:grid;
+            grid-template-columns:1fr 1fr;
+            gap:18px;
+            align-items:center;
+          ">
+            <div style="display:flex; align-items:center; gap:14px;">
+              <div style="width:54px;height:54px;border-radius:50%;background:#edf4ff;display:flex;align-items:center;justify-content:center;font-size:26px;">📅</div>
+              <div>
+                <div style="font-size:14px; font-weight:900; color:#2563eb;">FECHA DE PAGO</div>
+                <div id="reciboFecha" style="font-size:18px; font-weight:800; color:#163a63; margin-top:3px;">-</div>
+              </div>
+            </div>
+
+            <div style="text-align:right; padding-right:8px;">
+              <div style="
+                font-family:Georgia, serif;
+                font-size:24px;
+                font-style:italic;
+                color:#1e40af;
+              ">Gracias</div>
+            </div>
+          </div>
+
+          <div style="margin:18px auto 0; width:100%; display:flex; align-items:center; gap:14px;">
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+            <div style="color:#6ea0ff; font-size:18px;">✦</div>
+            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-top:16px;">
+        <button class="secondary" id="cerrarReciboBtn">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
+
+
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA-JYZFe4EvET54o9IHVnAybqFqC1zId08",
+      authDomain: "registro--piscina-dayana.firebaseapp.com",
+      projectId: "registro--piscina-dayana",
+      storageBucket: "registro--piscina-dayana.firebasestorage.app",
+      messagingSenderId: "471063992478",
+      appId: "1:471063992478:web:6c49b26aa13fa1963b038f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    let registros = [];
+    let editingId = null;
+    let modalEdit = { id: null, field: null };
+
+    const $ = (id) => document.getElementById(id);
+
+    const fields = {
+      empleada: $("empleada"),
+      nombrePiscina: $("nombrePiscina"),
+      direccion: $("direccion"),
+      clave: $("clave"),
+      inicio: $("inicio"),
+      cierre: $("cierre"),
+      visitas: $("visitas"),
+      diasVisitas: $("diasVisitas"),
+      valorVisita: $("valorVisita"),
+      basura: $("basura"),
+      pagoMes: $("pagoMes"),
+      notas: $("notas"),
+    };
+
+    const monthFields = {
+      mayoExtra: $("mayoExtra"), mayoNota: $("mayoNota"),
+      junioExtra: $("junioExtra"), junioNota: $("junioNota"),
+      julioExtra: $("julioExtra"), julioNota: $("julioNota"),
+      agostoExtra: $("agostoExtra"), agostoNota: $("agostoNota"),
+      septiembreExtra: $("septiembreExtra"), septiembreNota: $("septiembreNota"),
+    };
+    const yearMonths = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+
+
+    function money(v){
+      return new Intl.NumberFormat("es-MX", { style:"currency", currency:"MXN" }).format(Number(v || 0));
     }
-  });
-});
 
-}
-</script>
 
+    function applyEmployeeVisibility(){
+      const empSel = document.getElementById("empleada");
+      if(!empSel) return;
+      const emp = empSel.value;
+      yearMonths.forEach(m=>{
+        const fabInput = document.getElementById(m+"Fabiola");
+        const asmInput = document.getElementById(m+"Asmirian");
+        if(fabInput && asmInput){
+          const fabLabel = document.querySelector('label[for="'+m+'Fabiola"]');
+          const asmLabel = document.querySelector('label[for="'+m+'Asmirian"]');
+          if(emp === "Fabiola"){
+            if(fabInput) fabInput.style.display = "";
+            if(fabLabel) fabLabel.style.display = "";
+            if(asmInput) asmInput.style.display = "none";
+            if(asmLabel) asmLabel.style.display = "none";
+          }else{
+            if(fabInput) fabInput.style.display = "none";
+            if(fabLabel) fabLabel.style.display = "none";
+            if(asmInput) asmInput.style.display = "";
+            if(asmLabel) asmLabel.style.display = "";
+          }
+        }
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str || "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function buildMonths(){
+      return {
+        mayo: { extra: Number(monthFields.mayoExtra.value || 0), nota: monthFields.mayoNota.value.trim() },
+        junio: { extra: Number(monthFields.junioExtra.value || 0), nota: monthFields.junioNota.value.trim() },
+        julio: { extra: Number(monthFields.julioExtra.value || 0), nota: monthFields.julioNota.value.trim() },
+        agosto: { extra: Number(monthFields.agostoExtra.value || 0), nota: monthFields.agostoNota.value.trim() },
+        septiembre: { extra: Number(monthFields.septiembreExtra.value || 0), nota: monthFields.septiembreNota.value.trim() },
+      };
+    }
+
+    function getMonthsExtraTotal(months){
+      if(!months) return 0;
+      return ["mayo","junio","julio","agosto","septiembre"].reduce((acc, key) => acc + Number((months[key] && months[key].extra) || 0), 0);
+    }
+
+    function loadMonthsToModal(months = {}){
+      const safe = (m, prop, fallback="") => ((months[m] && months[m][prop]) ?? fallback);
+      monthFields.mayoExtra.value = safe("mayo","extra","");
+      monthFields.mayoNota.value = safe("mayo","nota","");
+      monthFields.junioExtra.value = safe("junio","extra","");
+      monthFields.junioNota.value = safe("junio","nota","");
+      monthFields.julioExtra.value = safe("julio","extra","");
+      monthFields.julioNota.value = safe("julio","nota","");
+      monthFields.agostoExtra.value = safe("agosto","extra","");
+      monthFields.agostoNota.value = safe("agosto","nota","");
+      monthFields.septiembreExtra.value = safe("septiembre","extra","");
+      monthFields.septiembreNota.value = safe("septiembre","nota","");
+      $("monthExtrasTotal").textContent = money(getMonthsExtraTotal(months));
+    }
+    function createYearPaymentCards(){
+      const grid = $("yearPaymentGrid");
+      if(!grid || grid.dataset.ready) return;
+      const labels = {
+        enero:"Enero", febrero:"Febrero", marzo:"Marzo", abril:"Abril",
+        mayo:"Mayo", junio:"Junio", julio:"Julio", agosto:"Agosto",
+        septiembre:"Septiembre", octubre:"Octubre", noviembre:"Noviembre", diciembre:"Diciembre"
+      };
+      grid.innerHTML = yearMonths.map(m => `
+        <div class="month-card">
+          <h4>${labels[m]}</h4>
+          <label for="${m}Piscina">Pago piscina</label>
+          <input id="${m}Piscina" type="number" min="0" step="0.01" />
+          <label for="${m}Fabiola">Pago Fabiola</label>
+          <input id="${m}Fabiola" type="number" min="0" step="0.01" />
+          <label for="${m}Asmirian">Pago Asmirian</label>
+          <input id="${m}Asmirian" type="number" min="0" step="0.01" />
+          <label for="${m}Ganancia">Mi Ganancia</label>
+          <input id="${m}Ganancia" type="number" min="0" step="0.01" />
+          <label for="${m}Seguro">Extras</label>
+          <input id="${m}Seguro" type="number" min="0" step="0.01" />
+          <label for="${m}Fecha">Fecha de Pago</label>
+          <input id="${m}Fecha" type="date" />
+          <div class="month-summary"><span class="total-mes-highlight">💵 Total: <span id="${m}TotalGeneral">$0.00</span></span></div>
+        </div>
+      `).join("");
+      grid.dataset.ready = "1";
+      grid.addEventListener("input", refreshPagoPiscinaTotal);
+    }
+
+    function buildYearlyPayments(){
+      const data = {};
+      yearMonths.forEach(m => {
+        data[m] = {
+          piscina: Number($(m + "Piscina").value || 0),
+          fabiola: Number($(m + "Fabiola").value || 0),
+          asmirian: Number($(m + "Asmirian").value || 0),
+          ganancia: Number($(m + "Ganancia").value || 0),
+          seguro: Number($(m + "Seguro")?.value || 0),
+          extra: Number((((buildMonths()||{})[m]||{}).extra) || 0),
+          fecha: $(m + "Fecha")?.value || "",
+          nota: ""
+        };
+      });
+      return data;
+    }
+
+    function refreshEachMonthTotal(){
+      const data = buildYearlyPayments();
+      const emp = fields.empleada.value === "Asmirian" ? "asmirian" : "fabiola";
+      yearMonths.forEach(m => {
+        const it = data[m] || {};
+        const total = Number(it[emp] || 0) + Number(it.seguro || 0);
+        const el = $(m + "TotalGeneral");
+        if (el) el.textContent = money(total);
+      });
+    }
+
+    function getYearPiscinaTotal(yearlyPayments){
+      if(!yearlyPayments) return 0;
+      return yearMonths.reduce((acc, m) => {
+        const item = yearlyPayments[m] || {};
+        return acc + Number(item.piscina || 0) + Number(item.extra || 0) - Number(item.seguro || 0);
+      }, 0);
+    }
+
+    function loadYearlyPaymentsToModal(yearlyPayments = {}){
+  
+    const notasGenerales = $("notasGenerales");
+    if(notasGenerales){
+      notasGenerales.value = localStorage.getItem("notasGenerales") || "";
+      notasGenerales.addEventListener("input", () => {
+        localStorage.setItem("notasGenerales", notasGenerales.value);
+      });
+    }
+
+    createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
+      yearMonths.forEach(m => {
+        const item = yearlyPayments[m] || {};
+        $(m + "Piscina").value = item.piscina ?? "";
+        $(m + "Fabiola").value = item.fabiola ?? "";
+        $(m + "Asmirian").value = item.asmirian ?? "";
+        $(m + "Ganancia").value = item.ganancia ?? "";
+        if($(m + "Seguro")) $(m + "Seguro").value = item.seguro ?? "";
+        if($(m + "Fecha")) $(m + "Fecha").value = item.fecha ?? "";
+        if($(m + "Nota")) $(m + "Nota").value = item.nota ?? "";
+      });
+      refreshEachMonthTotal();
+    }
+
+    function refreshPagoPiscinaTotal(){
+      const total = getYearPiscinaTotal(buildYearlyPayments());
+      if(!fields.pagoMes.dataset.touched || !fields.pagoMes.value){
+        fields.pagoMes.value = String(total || "");
+      }
+      refreshEachMonthTotal();
+    }
+
+    function refreshPagoMes(){
+      const base = Number(fields.visitas.value || 0) * Number(fields.valorVisita.value || 0);
+      const extras = getMonthsExtraTotal(buildMonths());
+      if(!fields.pagoMes.dataset.touched || !fields.pagoMes.value){
+        fields.pagoMes.value = String(base + extras || "");
+      }
+      $("monthExtrasTotal").textContent = money(extras);
+    }
+
+    function resetForm(){
+      Object.values(fields).forEach(el => el.value = "");
+      fields.empleada.value = "Fabiola";
+      fields.pagoMes.dataset.touched = "";
+      editingId = null;
+      $("formTitle").textContent = "Información de la Piscina";
+      $("saveBtn").textContent = "Guardar información";
+      $("cancelEditBtn").style.display = "none";
+      loadMonthsToModal();
+      loadYearlyPaymentsToModal();
+      fields.empleada.focus();
+    }
+
+    function buildRecord(){
+      const visitas = Number(fields.visitas.value || 0);
+      const valorVisita = Number(fields.valorVisita.value || 0);
+      const pagoMesManual = Number(fields.pagoMes.value || 0);
+      const months = buildMonths();
+      const yearlyPayments = buildYearlyPayments();
+      const pagoCalculado = getYearPiscinaTotal(yearlyPayments);
+
+      return {
+        id: editingId || crypto.randomUUID(),
+        empleada: fields.empleada.value.trim(),
+        nombrePiscina: fields.nombrePiscina.value.trim(),
+        direccion: fields.direccion.value.trim(),
+        clave: fields.clave.value.trim(),
+        inicio: fields.inicio.value,
+        cierre: fields.cierre.value,
+        visitas,
+        diasVisitas: fields.diasVisitas.value.trim(),
+        valorVisita,
+        basura: fields.basura.value.trim(),
+        pagoMes: pagoMesManual > 0 ? pagoMesManual : pagoCalculado,
+        yearlyPayments,
+        months,
+        notas: fields.notas.value.trim(),
+        creadoEn: new Date().toISOString()
+      };
+    }
+
+    function validate(record){
+      if(!record.nombrePiscina) return "Escribe el nombre de la piscina.";
+      if(!record.direccion) return "Escribe la dirección.";
+      return "";
+    }
+
+    async function saveRecord(){
+      const record = buildRecord();
+      const error = validate(record);
+      if(error){
+        alert(error);
+        return;
+      }
+      await setDoc(doc(db, "piscinas", record.id), record);
+      createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
+    resetForm();
+    loadCierreMes();
+    }
+
+    function editRecord(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      editingId = id;
+      Object.keys(fields).forEach(k => fields[k].value = r[k] ?? "");
+      loadMonthsToModal(r.months || {});
+      loadYearlyPaymentsToModal(r.yearlyPayments || {});
+      $("formTitle").textContent = "Editar información";
+      $("saveBtn").textContent = "Guardar cambios";
+      $("cancelEditBtn").style.display = "inline-block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function deleteRecord(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      if(confirm("¿Seguro que quieres borrar este registro?")){
+        await deleteDoc(doc(db, "piscinas", id));
+        if(editingId === id) resetForm();
+      }
+    }
+
+
+    function openPaymentModal(){
+      loadYearlyPaymentsToModal((registros.find(x => x.id === editingId) || {}).yearlyPayments || buildYearlyPayments());
+
+      const cards = $("yearPaymentGrid") ? $("yearPaymentGrid").querySelectorAll(".month-card") : [];
+      cards.forEach((card, index) => {
+        const m = yearMonths[index];
+        const titleEl = card.querySelector("h4");
+        const piscina = $(m + "Piscina");
+        const fab = $(m + "Fabiola");
+        const asm = $(m + "Asmirian");
+        const gan = $(m + "Ganancia");
+        const seg = $(m + "Seguro");
+        const fec = $(m + "Fecha");
+
+        const piscinaLbl = document.querySelector('label[for="' + m + 'Piscina"]');
+        const fabLbl = document.querySelector('label[for="' + m + 'Fabiola"]');
+        const asmLbl = document.querySelector('label[for="' + m + 'Asmirian"]');
+        const ganLbl = document.querySelector('label[for="' + m + 'Ganancia"]');
+        const segLbl = document.querySelector('label[for="' + m + 'Seguro"]');
+        const fecLbl = document.querySelector('label[for="' + m + 'Fecha"]');
+        const totalWrap = $(m + "TotalGeneral") ? $(m + "TotalGeneral").closest(".month-summary") : null;
+
+        if(index === 0){
+          card.style.display = "";
+          if(titleEl) titleEl.textContent = "Pago Fijo";
+
+          if(piscina) piscina.style.display = "";
+          if(piscinaLbl) {
+            piscinaLbl.style.display = "";
+            piscinaLbl.textContent = "Pago Piscina";
+          }
+
+          if(gan) gan.style.display = "";
+          if(ganLbl) {
+            ganLbl.style.display = "";
+            ganLbl.textContent = "Mi Ganancia";
+          }
+
+          if(seg) seg.style.display = "none";
+          if(segLbl) segLbl.style.display = "none";
+          if(fec) fec.style.display = "none";
+          if(fecLbl) fecLbl.style.display = "none";
+          if(totalWrap) totalWrap.style.display = "none";
+
+          if(fields.empleada.value === "Fabiola"){
+            if(fab) fab.style.display = "";
+            if(fabLbl) {
+              fabLbl.style.display = "";
+              fabLbl.textContent = "Pago Fabiola";
+            }
+            if(asm) asm.style.display = "none";
+            if(asmLbl) asmLbl.style.display = "none";
+          } else {
+            if(fab) fab.style.display = "none";
+            if(fabLbl) fabLbl.style.display = "none";
+            if(asm) asm.style.display = "";
+            if(asmLbl) {
+              asmLbl.style.display = "";
+              asmLbl.textContent = "Pago Asmirian";
+            }
+          }
+        } else {
+          card.style.display = "none";
+        }
+      });
+
+      const title = document.querySelector("#paymentModal .modal-head h3");
+      if(title) title.textContent = "💵 Pago de la Piscina";
+      $("paymentModal").showModal();
+    }
+
+    async function savePaymentDetails(){
+      fields.pagoMes.dataset.touched = "";
+      refreshPagoPiscinaTotal();
+      if(editingId){
+        const idx = registros.findIndex(x => x.id === editingId);
+        if(idx >= 0){
+          registros[idx].yearlyPayments = buildYearlyPayments();
+          registros[idx].pagoMes = Number(fields.pagoMes.value || 0);
+          await setDoc(doc(db, "piscinas", registros[idx].id), registros[idx]);
+        }
+      }
+      $("paymentModal").close();
+    }
+
+        function showYearlyPaymentSummary(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      editingId = id;
+      loadYearlyPaymentsToModal(r.yearlyPayments || {});
+      applyEmployeeVisibility();
+
+      yearMonths.forEach(m => {
+        const piscina = $(m + "Piscina");
+        const fab = $(m + "Fabiola");
+        const asm = $(m + "Asmirian");
+        const gan = $(m + "Ganancia");
+        const seg = $(m + "Seguro");
+        const fec = $(m + "Fecha");
+
+        const piscinaLbl = document.querySelector('label[for="' + m + 'Piscina"]');
+        const fabLbl = document.querySelector('label[for="' + m + 'Fabiola"]');
+        const asmLbl = document.querySelector('label[for="' + m + 'Asmirian"]');
+        const ganLbl = document.querySelector('label[for="' + m + 'Ganancia"]');
+        const segLbl = document.querySelector('label[for="' + m + 'Seguro"]');
+        const fecLbl = document.querySelector('label[for="' + m + 'Fecha"]');
+
+        // Hide fields that should not appear
+        if(piscina) piscina.style.display = "none";
+        if(piscinaLbl) piscinaLbl.style.display = "none";
+        if(gan) gan.style.display = "none";
+        if(ganLbl) ganLbl.style.display = "none";
+
+        // Show Extras + Fecha de Pago
+        if(seg) seg.style.display = "";
+        if(segLbl) { segLbl.style.display = ""; segLbl.textContent = "Extras"; }
+        if(fec) fec.style.display = "";
+        if(fecLbl) { fecLbl.style.display = ""; fecLbl.textContent = "Fecha de Pago"; }
+
+        // Show only corresponding employee payment
+        if(r.empleada === "Fabiola"){
+          if(fab) fab.style.display = "";
+          if(fabLbl) { fabLbl.style.display = ""; fabLbl.textContent = "Pago Fabiola"; }
+          if(asm) asm.style.display = "none";
+          if(asmLbl) asmLbl.style.display = "none";
+        } else {
+          if(fab) fab.style.display = "none";
+          if(fabLbl) fabLbl.style.display = "none";
+          if(asm) asm.style.display = "";
+          if(asmLbl) { asmLbl.style.display = ""; asmLbl.textContent = "Pago Asmirian"; }
+        }
+
+        const current = buildYearlyPayments()[m] || {};
+        const total = Number(current[r.empleada === "Asmirian" ? "asmirian" : "fabiola"] || 0) + Number(current.seguro || 0);
+        const totalEl = $(m + "TotalGeneral");
+        if(totalEl) totalEl.textContent = money(total);
+      });
+
+      const title = document.querySelector("#paymentModal .modal-head h3");
+      if(title) title.textContent = "💵 Detalles de Pago";
+      $("paymentModal").showModal();
+      refreshEachMonthTotal();
+    }
+
+    function showPagosExtras(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      const data = r.yearlyPayments || {};
+      const lines = yearMonths.map(m => {
+        const it = data[m] || {};
+        const cap = m.charAt(0).toUpperCase() + m.slice(1);
+        const total = Number(it.piscina || 0) + Number(it.extra || 0) - Number(it.seguro || 0);
+        return `<strong>${cap}</strong><br>Pago Base: ${money(it.piscina || 0)}<br>Pago Extra: ${money(it.extra || 0)}<br>Descuentos De Seguro: ${money(it.seguro || 0)}<br><span class="total-mes-highlight">💵 Total Del Mes: ${money(total)}</span>${it.nota ? "<br>Notas De Pago: " + escapeHtml(it.nota) : ""}`;
+      }).join("<br><br>");
+      showText("💵 Pagos Extras De Esta Piscina", lines);
+    }
+
+    function openMonthModal(){
+      $("monthModal").showModal();
+      refreshPagoMes();
+    }
+
+    function saveMonthDetails(){
+      fields.pagoMes.dataset.touched = "";
+      refreshPagoMes();
+      $("monthModal").close();
+    }
+
+    function showMonthSummary(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      editingId = id;
+      loadYearlyPaymentsToModal(r.yearlyPayments || {});
+
+      const cards = $("yearPaymentGrid") ? $("yearPaymentGrid").querySelectorAll(".month-card") : [];
+      cards.forEach((card, index) => {
+        const m = yearMonths[index];
+        const titleEl = card.querySelector("h4");
+        const piscina = $(m + "Piscina");
+        const fab = $(m + "Fabiola");
+        const asm = $(m + "Asmirian");
+        const gan = $(m + "Ganancia");
+        const seg = $(m + "Seguro");
+        const fec = $(m + "Fecha");
+
+        const piscinaLbl = document.querySelector('label[for="' + m + 'Piscina"]');
+        const fabLbl = document.querySelector('label[for="' + m + 'Fabiola"]');
+        const asmLbl = document.querySelector('label[for="' + m + 'Asmirian"]');
+        const ganLbl = document.querySelector('label[for="' + m + 'Ganancia"]');
+        const segLbl = document.querySelector('label[for="' + m + 'Seguro"]');
+        const fecLbl = document.querySelector('label[for="' + m + 'Fecha"]');
+        const totalWrap = $(m + "TotalGeneral") ? $(m + "TotalGeneral").closest(".month-summary") : null;
+
+        card.style.display = "";
+        if(titleEl) {
+          const cap = m.charAt(0).toUpperCase() + m.slice(1);
+          titleEl.textContent = cap;
+        }
+
+        if(piscina) piscina.style.display = "none";
+        if(piscinaLbl) piscinaLbl.style.display = "none";
+        if(gan) gan.style.display = "none";
+        if(ganLbl) ganLbl.style.display = "none";
+
+        if(seg) seg.style.display = "";
+        if(segLbl) {
+          segLbl.style.display = "";
+          segLbl.textContent = "Extra";
+        }
+
+        if(fec) fec.style.display = "";
+        if(fecLbl) {
+          fecLbl.style.display = "";
+          fecLbl.textContent = "Fecha de Pago";
+        }
+
+        if((r.empleada || "").trim() === "Fabiola"){
+          if(fab) fab.style.display = "";
+          if(fabLbl) {
+            fabLbl.style.display = "";
+            fabLbl.textContent = "Pago";
+          }
+          if(asm) asm.style.display = "none";
+          if(asmLbl) asmLbl.style.display = "none";
+        } else {
+          if(fab) fab.style.display = "none";
+          if(fabLbl) fabLbl.style.display = "none";
+          if(asm) asm.style.display = "";
+          if(asmLbl) {
+            asmLbl.style.display = "";
+            asmLbl.textContent = "Pago";
+          }
+        }
+
+        if(totalWrap) totalWrap.style.display = "";
+      });
+
+      const title = document.querySelector("#paymentModal .modal-head h3");
+      if(title) title.textContent = "💵 Detalle de Pago";
+      $("paymentModal").showModal();
+      refreshEachMonthTotal();
+    }
+
+    function showText(title, text, id = null, field = null){
+      $("modalTitle").textContent = title;
+
+      const old = document.getElementById("modalPreview");
+      if(old) old.remove();
+
+      if(id && field){
+        $("modalLabel").style.display = "block";
+        $("modalTextarea").style.display = "block";
+        $("modalTextarea").value = text || "";
+        $("saveModalBtn").style.display = "inline-block";
+      } else {
+        $("modalLabel").style.display = "none";
+        $("modalTextarea").style.display = "none";
+        const preview = document.createElement("div");
+        preview.id = "modalPreview";
+        preview.innerHTML = text || "<span class='muted'>No hay información.</span>";
+        $("modalTextarea").parentElement.insertBefore(preview, $("modalTextarea"));
+        $("saveModalBtn").style.display = "none";
+      }
+
+      modalEdit = { id, field };
+      $("notesModal").showModal();
+    }
+
+    async function saveModalEdit(){
+      if(!modalEdit.id || !modalEdit.field) {
+        $("notesModal").close();
+        return;
+      }
+      const idx = registros.findIndex(x => x.id === modalEdit.id);
+      if(idx === -1) return;
+      registros[idx][modalEdit.field] = $("modalTextarea").value.trim();
+      await setDoc(doc(db, "piscinas", registros[idx].id), registros[idx]);
+      $("notesModal").close();
+    }
+
+    function exportData(){
+      const blob = new Blob([JSON.stringify(registros, null, 2)], { type:"application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "respaldo_registro_piscinas.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+
+    const CIERRE_KEY = "dayana_cierre_pago_mes";
+
+    function getCierreStore(){
+      try { return JSON.parse(localStorage.getItem(CIERRE_KEY) || "{}"); }
+      catch(e){ return {}; }
+    }
+
+    function setCierreStore(data){
+      localStorage.setItem(CIERRE_KEY, JSON.stringify(data));
+    }
+
+    function loadCierreMes(){
+      const mes = $("mesCierre")?.value || "enero";
+      const data = getCierreStore();
+      const item = data[mes] || {};
+      $("cierreFabiolaTotal").value = item.fabiolaTotal ?? "";
+      $("cierreFabiolaSeguro").value = item.fabiolaSeguro ?? "";
+      $("cierreFabiolaDepositar").value = item.fabiolaDepositar ?? "";
+      $("cierreFabiolaFecha").value = item.fabiolaFecha ?? "";
+      $("cierreAsmirianTotal").value = item.asmirianTotal ?? "";
+      $("cierreAsmirianSeguro").value = item.asmirianSeguro ?? "";
+      $("cierreAsmirianDepositar").value = item.asmirianDepositar ?? "";
+      $("cierreAsmirianFecha").value = item.asmirianFecha ?? "";
+    }
+
+    function saveCierreMes(){
+      const mes = $("mesCierre")?.value || "enero";
+      const data = getCierreStore();
+      data[mes] = {
+        fabiolaTotal: $("cierreFabiolaTotal").value,
+        fabiolaSeguro: $("cierreFabiolaSeguro").value,
+        fabiolaDepositar: $("cierreFabiolaDepositar").value,
+        fabiolaFecha: $("cierreFabiolaFecha").value,
+        asmirianTotal: $("cierreAsmirianTotal").value,
+        asmirianSeguro: $("cierreAsmirianSeguro").value,
+        asmirianDepositar: $("cierreAsmirianDepositar").value,
+        asmirianFecha: $("cierreAsmirianFecha").value,
+      };
+      setCierreStore(data);
+      alert("Cierre del mes guardado.");
+    }
+
+
+    const nombreMesBonito = {
+      enero:"ENERO", febrero:"FEBRERO", marzo:"MARZO", abril:"ABRIL",
+      mayo:"MAYO", junio:"JUNIO", julio:"JULIO", agosto:"AGOSTO",
+      septiembre:"SEPTIEMBRE", octubre:"OCTUBRE", noviembre:"NOVIEMBRE", diciembre:"DICIEMBRE"
+    };
+
+    function formatearFechaBonita(fecha){
+      if(!fecha || fecha === "-") return "-";
+      const meses = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+      const partes = String(fecha).split("-");
+      if(partes.length !== 3) return fecha;
+      const anio = partes[0];
+      const mes = Number(partes[1]) - 1;
+      const dia = Number(partes[2]);
+      return `${dia} de ${meses[mes]} de ${anio}`;
+    }
+
+    function openReciboMensual(empleada){
+      const mes = $("mesCierre")?.value || "enero";
+      const esAsmirian = empleada === "Asmirian";
+
+      const pagoTotal = esAsmirian ? ($("cierreAsmirianTotal")?.value || 0) : ($("cierreFabiolaTotal")?.value || 0);
+      const extras = esAsmirian ? ($("cierreAsmirianExtras")?.value || 0) : ($("cierreFabiolaExtras")?.value || 0);
+      const descuento = esAsmirian ? ($("cierreAsmirianSeguro")?.value || 0) : ($("cierreFabiolaSeguro")?.value || 0);
+      const totalPagado = esAsmirian ? ($("cierreAsmirianDepositar")?.value || 0) : ($("cierreFabiolaDepositar")?.value || 0);
+      const fecha = esAsmirian ? ($("cierreAsmirianFecha")?.value || "-") : ($("cierreFabiolaFecha")?.value || "-");
+
+      $("reciboNombre").textContent = empleada;
+      $("reciboMes").textContent = "MES: " + (nombreMesBonito[mes] || mes);
+      $("reciboPagoTotal").textContent = money(pagoTotal);
+      $("reciboExtras").textContent = money(extras);
+      $("reciboDescuento").textContent = money(descuento);
+      $("reciboTotalPagado").textContent = money(totalPagado);
+      $("reciboFecha").textContent = formatearFechaBonita(fecha);
+
+      $("reciboModal").showModal();
+    }
+
+    function renderResumenMes(){
+      const mes = $("mesResumen")?.value || "enero";
+      const monthIndex = {
+        enero: "01", febrero: "02", marzo: "03", abril: "04",
+        mayo: "05", junio: "06", julio: "07", agosto: "08",
+        septiembre: "09", octubre: "10", noviembre: "11", diciembre: "12"
+      }[mes];
+
+      const totalFabiola = registros.reduce((acc, r) => {
+        const item = (((r.yearlyPayments || {})[mes]) || {});
+        const fecha = String(item.fecha || "");
+        const pagadoEseMes = fecha.slice(5, 7) === monthIndex;
+        if(!pagadoEseMes) return acc;
+        const pago = Number(item.fabiola || 0);
+        const extras = (r.empleada === "Fabiola") ? Number(item.seguro || 0) : 0;
+        return acc + pago + extras;
+      }, 0);
+
+      const totalAsmirian = registros.reduce((acc, r) => {
+        const item = (((r.yearlyPayments || {})[mes]) || {});
+        const fecha = String(item.fecha || "");
+        const pagadoEseMes = fecha.slice(5, 7) === monthIndex;
+        if(!pagadoEseMes) return acc;
+        const pago = Number(item.asmirian || 0);
+        const extras = (r.empleada === "Asmirian") ? Number(item.seguro || 0) : 0;
+        return acc + pago + extras;
+      }, 0);
+
+      $("resumenFabiola").textContent = money(totalFabiola);
+      $("resumenAsmirian").textContent = money(totalAsmirian);
+      $("resumenGeneral").textContent = money(totalFabiola + totalAsmirian);
+    }
+
+    function render(){
+      const q = $("searchInput").value.trim().toLowerCase();
+      const empleadoFiltro = $("filterEmpleado").value;
+
+      const filtrados = registros.filter(r => {
+        const text = [
+          r.empleada, r.nombrePiscina, r.direccion, r.clave, r.basura, r.diasVisitas, r.notas
+        ].join(" ").toLowerCase();
+
+        const matchText = !q || text.includes(q);
+        const matchEmpleado = !empleadoFiltro || r.empleada === empleadoFiltro;
+        return matchText && matchEmpleado;
+      });
+
+      $("tbody").innerHTML = filtrados.map(r => `
+        <tr>
+          <td><span class="employee-badge">${escapeHtml(r.empleada)}</span></td>
+          <td><strong><button class="secondary" style="padding:8px 10px;" onclick="window.editRecord('${r.id}')">${escapeHtml(r.nombrePiscina)}</button></strong></td>
+          <td><button class="secondary" style="padding:8px 10px;" onclick="window.editRecord('${r.id}')">${escapeHtml(r.direccion)}</button></td>
+          <td>${escapeHtml(r.clave || "-")}</td>
+          <td>${escapeHtml(r.inicio || "-")}</td>
+          <td>${escapeHtml(r.cierre || "-")}</td>
+          <td><span class="tag">${escapeHtml(r.visitas)}</span></td>
+          <td>${escapeHtml(r.diasVisitas || "-")}</td>
+          <td>${money(r.valorVisita)}</td>
+          <td>${escapeHtml(r.basura || "-")}</td>
+          
+          <td><button class="secondary" onclick="window.showMonthSummary('${r.id}')">Detalle de Pago</button></td>
+          
+          <td><button class="secondary" onclick="window.editNotes('${r.id}')">Agregar notas</button></td>
+          <td>
+            <div class="mini-actions">
+              <button class="warning" onclick="window.editRecord('${r.id}')">Editar información</button>
+              <button class="danger" onclick="window.deleteRecord('${r.id}')">Borrar</button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+
+      $("emptyState").style.display = filtrados.length ? "none" : "block";
+      $("statTotal").textContent = registros.length;
+      $("statPago").textContent = money(registros.reduce((a,b) => a + Number(b.pagoMes || 0), 0));
+      $("statFabiola").textContent = registros.filter(r => r.empleada === "Fabiola").length;
+      $("statAsmirian").textContent = registros.filter(r => r.empleada === "Asmirian").length;
+    }
+
+    function editNotes(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+      showText(`Notas de ${r.nombrePiscina}`, r.notas || "", r.id, "notas");
+    }
+
+    $("btnPagoPiscina").addEventListener("click", openPaymentModal);
+    $("savePaymentBtn").addEventListener("click", savePaymentDetails);
+    $("closePaymentBtn").addEventListener("click", () => $("paymentModal").close());
+    $("saveBtn").addEventListener("click", saveRecord);
+    
+    $("saveMonthBtn").addEventListener("click", saveMonthDetails);
+    $("closeMonthBtn").addEventListener("click", () => $("monthModal").close());
+    $("clearBtn").addEventListener("click", resetForm);
+    $("cancelEditBtn").addEventListener("click", resetForm);
+    $("searchInput").addEventListener("input", render);
+    $("filterEmpleado").addEventListener("change", render);
+    $("mesResumen")?.addEventListener("change", renderResumenMes);
+    $("mesCierre")?.addEventListener("change", loadCierreMes);
+    $("guardarCierreBtn")?.addEventListener("click", saveCierreMes);
+    $("reciboFabiolaBtn")?.addEventListener("click", () => openReciboMensual("Fabiola"));
+    $("reciboAsmirianBtn")?.addEventListener("click", () => openReciboMensual("Asmirian"));
+    $("cerrarReciboBtn")?.addEventListener("click", () => $("reciboModal").close());
+    const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
+    $("exportBtn").addEventListener("click", exportData);
+    $("saveModalBtn").addEventListener("click", saveModalEdit);
+    $("closeModalBtn").addEventListener("click", () => {
+      const old = document.getElementById("modalPreview");
+      if(old) old.remove();
+      $("modalLabel").style.display = "block";
+      $("modalTextarea").style.display = "block";
+      $("notesModal").close();
+    });
+
+    ["visitas","valorVisita"].forEach(id => $(id).addEventListener("input", refreshPagoMes));
+    Object.values(monthFields).forEach(el => el.addEventListener("input", refreshPagoMes));
+    fields.pagoMes.addEventListener("input", () => fields.pagoMes.dataset.touched = "1");
+
+    window.editRecord = editRecord;
+    window.deleteRecord = deleteRecord;
+    window.showMonthSummary = showMonthSummary;
+    window.showYearlyPaymentSummary = showYearlyPaymentSummary;
+    window.showPagosExtras = showPagosExtras;
+    window.editNotes = editNotes;
+    window.openReciboMensual = openReciboMensual;
+
+    onSnapshot(collection(db, "piscinas"), (snapshot) => {
+      registros = snapshot.docs.map(d => d.data());
+      render();
+      renderResumenMes();
+      loadCierreMes();
+    }, (error) => console.error("Error al sincronizar:", error));
+
+    createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
+    resetForm();
+    loadCierreMes();
+  </script>
 </body>
 </html>
