@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -878,12 +877,14 @@
 
       <div style="text-align:center; margin-top:16px;">
         <button class="secondary" id="cerrarReciboBtn">Cerrar</button>
+        <button class="primary" id="descargarReciboBtn" type="button" style="margin-left:10px;">📸 Guardar / Compartir</button>
       </div>
     </div>
   </dialog>
 
 
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1066,15 +1067,6 @@
     }
 
     function loadYearlyPaymentsToModal(yearlyPayments = {}){
-  
-    const notasGenerales = $("notasGenerales");
-    if(notasGenerales){
-      notasGenerales.value = localStorage.getItem("notasGenerales") || "";
-      notasGenerales.addEventListener("input", () => {
-        localStorage.setItem("notasGenerales", notasGenerales.value);
-      });
-    }
-
     createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
       yearMonths.forEach(m => {
         const item = yearlyPayments[m] || {};
@@ -1161,7 +1153,15 @@
         return;
       }
       await setDoc(doc(db, "piscinas", record.id), record);
-      createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
+      const notasGenerales = $("notasGenerales");
+    if(notasGenerales){
+      notasGenerales.value = localStorage.getItem("notasGenerales") || "";
+      notasGenerales.addEventListener("input", () => {
+        localStorage.setItem("notasGenerales", notasGenerales.value);
+      });
+    }
+
+    createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
     resetForm();
     loadCierreMes();
     }
@@ -1560,6 +1560,67 @@
       $("reciboModal").showModal();
     }
 
+
+    async function descargarReciboComoImagen(){
+      const card = $("reciboCard");
+      if(!card || typeof html2canvas === "undefined"){
+        alert("No se pudo preparar la imagen del comprobante.");
+        return;
+      }
+
+      try{
+        const canvas = await html2canvas(card, {
+          scale: 2,
+          backgroundColor: "#f7f9fc",
+          useCORS: true
+        });
+
+        const mes = ($("mesCierre")?.value || "mes").toLowerCase();
+        const nombre = (($("reciboNombre")?.textContent || "comprobante").trim() || "comprobante").toLowerCase();
+        const fileName = `comprobante-${nombre}-${mes}.png`;
+
+        const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+        if(!blob){
+          alert("No se pudo generar la imagen.");
+          return;
+        }
+
+        const file = new File([blob], fileName, { type: "image/png" });
+
+        if(navigator.canShare && navigator.canShare({ files: [file] })){
+          await navigator.share({
+            files: [file],
+            title: "Comprobante de Pago",
+            text: "Comprobante de pago"
+          });
+          return;
+        }
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+        const isiPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if(isiPhone){
+          const win = window.open(url, "_blank");
+          if(win){
+            alert("Se abrió la imagen. En iPhone, mantén presionada la imagen y toca 'Guardar en Fotos' o compártela.");
+          }else{
+            alert("En iPhone, si no se descargó, vuelve a tocar el botón y permite abrir la imagen para guardarla.");
+          }
+        }
+      }catch(err){
+        console.error(err);
+        alert("No se pudo guardar el comprobante.");
+      }
+    }
+
     function renderResumenMes(){
       const mes = $("mesResumen")?.value || "enero";
       const monthIndex = {
@@ -1662,6 +1723,7 @@
     $("reciboFabiolaBtn")?.addEventListener("click", () => openReciboMensual("Fabiola"));
     $("reciboAsmirianBtn")?.addEventListener("click", () => openReciboMensual("Asmirian"));
     $("cerrarReciboBtn")?.addEventListener("click", () => $("reciboModal").close());
+    $("descargarReciboBtn")?.addEventListener("click", descargarReciboComoImagen);
     const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
     $("exportBtn").addEventListener("click", exportData);
     $("saveModalBtn").addEventListener("click", saveModalEdit);
@@ -1684,6 +1746,7 @@
     window.showPagosExtras = showPagosExtras;
     window.editNotes = editNotes;
     window.openReciboMensual = openReciboMensual;
+    window.descargarReciboComoImagen = descargarReciboComoImagen;
 
     onSnapshot(collection(db, "piscinas"), (snapshot) => {
       registros = snapshot.docs.map(d => d.data());
