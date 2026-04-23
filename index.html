@@ -12,30 +12,51 @@ body{
   margin:0;
   padding:20px;
 }
+
 h2{
   text-align:center;
+  color:#1e5ea8;
 }
+
 .card{
   background:white;
   padding:15px;
   border-radius:15px;
   margin-bottom:15px;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
+
 input{
   width:100%;
-  padding:8px;
+  padding:10px;
   margin:6px 0;
   border-radius:8px;
   border:1px solid #ccc;
 }
+
 button{
   width:100%;
-  padding:10px;
+  padding:12px;
   margin-top:10px;
   border:none;
   border-radius:10px;
   background:#1e5ea8;
   color:white;
+  font-size:14px;
+}
+
+#reciboCard{
+  background:white;
+  padding:25px;
+  border-radius:20px;
+  max-width:420px;
+  margin:auto;
+  text-align:center;
+}
+
+#reciboCard h2{
+  color:#1e5ea8;
+  margin-bottom:10px;
 }
 </style>
 </head>
@@ -52,7 +73,7 @@ button{
 <input id="totalF" placeholder="Total a pagar">
 <input id="fechaF" type="date">
 
-<button onclick="abrir('Fabiola')">🧾 Comprobante</button>
+<button onclick="abrirRecibo('Fabiola')">🧾 Ver Comprobante</button>
 </div>
 
 <div class="card">
@@ -63,36 +84,28 @@ button{
 <input id="totalA" placeholder="Total a pagar">
 <input id="fechaA" type="date">
 
-<button onclick="abrir('Asmirian')">🧾 Comprobante</button>
+<button onclick="abrirRecibo('Asmirian')">🧾 Ver Comprobante</button>
 </div>
 
 <dialog id="modal">
 
-<div id="recibo" style="
-background:white;
-padding:20px;
-border-radius:20px;
-max-width:420px;
-margin:auto;
-">
+<div id="reciboCard">
 
-<h2 style="text-align:center;color:#1e5ea8;">
-COMPROBANTE DE PAGO
-</h2>
+<h2>COMPROBANTE DE PAGO</h2>
 
-<h3 id="nombre" style="text-align:center;"></h3>
+<h3 id="nombre"></h3>
 
-<p>Pago: <span id="pago"></span></p>
-<p>Extras: <span id="extra"></span></p>
-<p>Descuento: <span id="desc"></span></p>
+<p>💰 Pago: <span id="pago"></span></p>
+<p>✨ Extras: <span id="extra"></span></p>
+<p>➖ Descuento: <span id="desc"></span></p>
 
 <h3>Total: <span id="total"></span></h3>
 
-<p>Fecha: <span id="fecha"></span></p>
+<p>📅 Fecha: <span id="fecha"></span></p>
 
-<p style="text-align:center;">Gracias</p>
+<p style="margin-top:20px;">Gracias</p>
 
-<button onclick="guardar()">📸 Guardar / Compartir</button>
+<button onclick="guardarImagen()">📸 Guardar / Compartir</button>
 <button onclick="modal.close()">Cerrar</button>
 
 </div>
@@ -102,7 +115,7 @@ COMPROBANTE DE PAGO
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
-function abrir(nombre){
+function abrirRecibo(nombre){
 
 let pago,extra,desc,total,fecha;
 
@@ -120,26 +133,19 @@ if(nombre==="Fabiola"){
   fecha=fechaA.value;
 }
 
-nombreSpan = document.getElementById("nombre");
-pagoSpan = document.getElementById("pago");
-extraSpan = document.getElementById("extra");
-descSpan = document.getElementById("desc");
-totalSpan = document.getElementById("total");
-fechaSpan = document.getElementById("fecha");
-
-nombreSpan.innerText = nombre;
-pagoSpan.innerText = pago;
-extraSpan.innerText = extra;
-descSpan.innerText = desc;
-totalSpan.innerText = total;
-fechaSpan.innerText = fecha;
+document.getElementById("nombre").innerText=nombre;
+document.getElementById("pago").innerText=pago;
+document.getElementById("extra").innerText=extra;
+document.getElementById("desc").innerText=desc;
+document.getElementById("total").innerText=total;
+document.getElementById("fecha").innerText=fecha;
 
 modal.showModal();
 }
 
-function guardar(){
+function guardarImagen(){
 
-html2canvas(document.getElementById("recibo")).then(canvas=>{
+html2canvas(document.getElementById("reciboCard")).then(canvas=>{
   canvas.toBlob(blob=>{
     const file=new File([blob],"comprobante.png",{type:"image/png"});
 
