@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -307,6 +308,29 @@
       input,select,textarea{font-size:16px;}
       .hero h1{font-size:1.45rem; line-height:1.2}
     }
+
+    #reciboCard, #reciboCard *{
+      box-sizing:border-box;
+      transform:none !important;
+      filter:none !important;
+      text-size-adjust:none;
+      -webkit-text-size-adjust:none;
+    }
+    #reciboCard{
+      zoom:1;
+    }
+    @media (max-width:760px){
+      #reciboModal .modal-body{
+        overflow:auto;
+        -webkit-overflow-scrolling:touch;
+      }
+      #reciboCard{
+        width:720px !important;
+        max-width:720px !important;
+        min-width:720px !important;
+      }
+    }
+
   </style>
 
 <style>
@@ -683,11 +707,13 @@
   <dialog id="reciboModal">
     <div class="modal-body" style="background:rgba(247,249,252,.96); padding:24px;">
       <div id="reciboCard" style="
+        width:720px;
+        max-width:720px;
+        min-width:720px;
         background:#ffffff;
         border-radius:28px;
-        max-width:720px;
         margin:0 auto;
-        box-shadow:0 26px 60px rgba(17,35,72,.18);
+        box-shadow:none;
         overflow:hidden;
         border:1px solid #d8e4f5;
         position:relative;
@@ -878,6 +904,7 @@
       <div style="text-align:center; margin-top:16px;">
         <button class="secondary" id="cerrarReciboBtn">Cerrar</button>
         <button class="primary" id="descargarReciboBtn" type="button" style="margin-left:10px;">📸 Guardar / Compartir</button>
+        <div style="margin-top:10px; font-size:.88rem; color:#64748b;">En iPhone se abrirá la imagen para guardarla o compartirla.</div>
       </div>
     </div>
   </dialog>
@@ -1570,9 +1597,14 @@
 
       try{
         const canvas = await html2canvas(card, {
-          scale: 2,
-          backgroundColor: "#f7f9fc",
-          useCORS: true
+          scale: 3,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          logging: false,
+          scrollX: 0,
+          scrollY: 0,
+          windowWidth: 900,
+          width: 720
         });
 
         const mes = ($("mesCierre")?.value || "mes").toLowerCase();
@@ -1597,24 +1629,32 @@
         }
 
         const url = URL.createObjectURL(blob);
+        const isiPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+        if(isiPhone){
+          const win = window.open(url, "_blank");
+          if(win){
+            alert("En iPhone, mantén presionada la imagen y toca 'Guardar en Fotos' o compártela.");
+          }else{
+            const a = document.createElement("a");
+            a.href = url;
+            a.target = "_blank";
+            a.rel = "noopener";
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+          }
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          return;
+        }
+
         const a = document.createElement("a");
         a.href = url;
         a.download = fileName;
         document.body.appendChild(a);
         a.click();
         a.remove();
-
         setTimeout(() => URL.revokeObjectURL(url), 1500);
-
-        const isiPhone = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-        if(isiPhone){
-          const win = window.open(url, "_blank");
-          if(win){
-            alert("Se abrió la imagen. En iPhone, mantén presionada la imagen y toca 'Guardar en Fotos' o compártela.");
-          }else{
-            alert("En iPhone, si no se descargó, vuelve a tocar el botón y permite abrir la imagen para guardarla.");
-          }
-        }
       }catch(err){
         console.error(err);
         alert("No se pudo guardar el comprobante.");
