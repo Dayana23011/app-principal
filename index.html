@@ -493,6 +493,28 @@
           style="width:100%; min-height:140px; border-radius:18px; padding:14px; border:1px solid var(--line); font-size:1rem;"></textarea>
       </div>
 
+      <div class="card" style="margin-top:18px; background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,251,255,.96));">
+        <h2 style="color:#1e5ea8; margin:0 0 14px; font-size:1.6rem;">📝 Notas 📎</h2>
+        <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr));">
+          <div class="stat" style="background:linear-gradient(180deg,#ffffff,#f8fbff);">
+            <div class="k" style="color:#1e5ea8;">Fabiola</div>
+            <textarea id="notaFabiolaInput" placeholder="Escribe una nota para Fabiola..." style="min-height:120px;"></textarea>
+            <div style="margin-top:10px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaFabiolaFecha">-</span></div>
+            <div class="actions" style="margin-top:12px;">
+              <button class="primary" id="guardarNotaFabiolaBtn" type="button">💾 Guardar nota Fabiola</button>
+            </div>
+          </div>
+          <div class="stat" style="background:linear-gradient(180deg,#ffffff,#f8fbff);">
+            <div class="k" style="color:#1e5ea8;">Asmirian</div>
+            <textarea id="notaAsmirianInput" placeholder="Escribe una nota para Asmirian..." style="min-height:120px;"></textarea>
+            <div style="margin-top:10px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaAsmirianFecha">-</span></div>
+            <div class="actions" style="margin-top:12px;">
+              <button class="primary" id="guardarNotaAsmirianBtn" type="button">💾 Guardar nota Asmirian</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <section class="card" style="margin-top:18px;">
@@ -1165,6 +1187,7 @@
     createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
     resetForm();
     loadCierreMes();
+    escucharNotasEmpleadas();
     }
 
     function editRecord(id){
@@ -1531,7 +1554,8 @@
         extras: Number($("cierreFabiolaExtras").value || 0),
         descuentoSeguro: Number($("cierreFabiolaSeguro").value || 0),
         totalDepositar: Number($("cierreFabiolaDepositar").value || 0),
-        fecha: $("cierreFabiolaFecha").value || ""
+        fecha: $("cierreFabiolaFecha").value || "",
+        actualizadoEn: new Date().toISOString()
       });
 
       await setDoc(doc(db, "cierres_pago", `asmirian_${mes}`), {
@@ -1541,10 +1565,12 @@
         extras: Number($("cierreAsmirianExtras").value || 0),
         descuentoSeguro: Number($("cierreAsmirianSeguro").value || 0),
         totalDepositar: Number($("cierreAsmirianDepositar").value || 0),
-        fecha: $("cierreAsmirianFecha").value || ""
+        fecha: $("cierreAsmirianFecha").value || "",
+        actualizadoEn: new Date().toISOString()
       });
 
-      alert("Cierre del mes guardado.");
+      renderResumenMes();
+      alert(`Cierre de ${mes} guardado y enviado a la nube para Fabiola y Asmirian.`);
     }
 
 
@@ -1647,33 +1673,54 @@
       }
     }
 
+
+    function formatearFechaHora(fechaIso){
+      if(!fechaIso) return "-";
+      try{
+        return new Date(fechaIso).toLocaleString("es-MX");
+      }catch(e){
+        return fechaIso;
+      }
+    }
+
+    async function guardarNotaEmpleado(empleada){
+      const key = empleada.toLowerCase();
+      const inputId = empleada === "Fabiola" ? "notaFabiolaInput" : "notaAsmirianInput";
+      const fechaId = empleada === "Fabiola" ? "notaFabiolaFecha" : "notaAsmirianFecha";
+      const texto = ($(inputId)?.value || "").trim();
+      const ahora = new Date().toISOString();
+
+      await setDoc(doc(db, "notas_empleadas", key), {
+        empleada,
+        texto,
+        actualizadoEn: ahora
+      });
+
+      if($(fechaId)) $(fechaId).textContent = formatearFechaHora(ahora);
+      alert(`Nota guardada y enviada a la nube para ${empleada}.`);
+    }
+
+    function escucharNotasEmpleadas(){
+      onSnapshot(doc(db, "notas_empleadas", "fabiola"), (snap) => {
+        const data = snap.exists() ? snap.data() : {};
+        if($("notaFabiolaInput")) $("notaFabiolaInput").value = data.texto || "";
+        if($("notaFabiolaFecha")) $("notaFabiolaFecha").textContent = formatearFechaHora(data.actualizadoEn);
+      });
+
+      onSnapshot(doc(db, "notas_empleadas", "asmirian"), (snap) => {
+        const data = snap.exists() ? snap.data() : {};
+        if($("notaAsmirianInput")) $("notaAsmirianInput").value = data.texto || "";
+        if($("notaAsmirianFecha")) $("notaAsmirianFecha").textContent = formatearFechaHora(data.actualizadoEn);
+      });
+    }
+
     function renderResumenMes(){
       const mes = $("mesResumen")?.value || "enero";
-      const monthIndex = {
-        enero: "01", febrero: "02", marzo: "03", abril: "04",
-        mayo: "05", junio: "06", julio: "07", agosto: "08",
-        septiembre: "09", octubre: "10", noviembre: "11", diciembre: "12"
-      }[mes];
+      const data = getCierreStore();
+      const item = data[mes] || {};
 
-      const totalFabiola = registros.reduce((acc, r) => {
-        const item = (((r.yearlyPayments || {})[mes]) || {});
-        const fecha = String(item.fecha || "");
-        const pagadoEseMes = fecha.slice(5, 7) === monthIndex;
-        if(!pagadoEseMes) return acc;
-        const pago = Number(item.fabiola || 0);
-        const extras = (r.empleada === "Fabiola") ? Number(item.seguro || 0) : 0;
-        return acc + pago + extras;
-      }, 0);
-
-      const totalAsmirian = registros.reduce((acc, r) => {
-        const item = (((r.yearlyPayments || {})[mes]) || {});
-        const fecha = String(item.fecha || "");
-        const pagadoEseMes = fecha.slice(5, 7) === monthIndex;
-        if(!pagadoEseMes) return acc;
-        const pago = Number(item.asmirian || 0);
-        const extras = (r.empleada === "Asmirian") ? Number(item.seguro || 0) : 0;
-        return acc + pago + extras;
-      }, 0);
+      const totalFabiola = Number(item.fabiolaDepositar || 0);
+      const totalAsmirian = Number(item.asmirianDepositar || 0);
 
       $("resumenFabiola").textContent = money(totalFabiola);
       $("resumenAsmirian").textContent = money(totalAsmirian);
@@ -1750,6 +1797,8 @@
     $("reciboAsmirianBtn")?.addEventListener("click", () => openReciboMensual("Asmirian"));
     $("cerrarReciboBtn")?.addEventListener("click", () => $("reciboModal").close());
     $("descargarReciboBtn")?.addEventListener("click", descargarReciboComoImagen);
+    $("guardarNotaFabiolaBtn")?.addEventListener("click", () => guardarNotaEmpleado("Fabiola"));
+    $("guardarNotaAsmirianBtn")?.addEventListener("click", () => guardarNotaEmpleado("Asmirian"));
     const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
     $("exportBtn").addEventListener("click", exportData);
     $("saveModalBtn").addEventListener("click", saveModalEdit);
@@ -1773,6 +1822,7 @@
     window.editNotes = editNotes;
     window.openReciboMensual = openReciboMensual;
     window.descargarReciboComoImagen = descargarReciboComoImagen;
+    window.guardarNotaEmpleado = guardarNotaEmpleado;
 
     onSnapshot(collection(db, "piscinas"), (snapshot) => {
       registros = snapshot.docs.map(d => d.data());
