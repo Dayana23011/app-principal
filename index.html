@@ -476,16 +476,15 @@
 <body>
 
 <div class="sms-container">
-  <button class="sms-btn" onclick="window.location.href='sms:+14694282123?body=Hola Fabi'">
-    <span class="sms-icon">💬</span><span>Fabiola</span>
+  <button class="sms-btn" onclick="window.open('https://chat.whatsapp.com/HUr6MoIpY94901OlV2foAz?mode=gi_t','_blank')">
+    <span class="sms-icon">💬</span><span>WhatsApp Asmirian</span>
   </button>
 
-  <button class="sms-btn" onclick="window.location.href='sms:+12147429503?body=Hola Asmirian'">
-    <span class="sms-icon">💬</span><span>Asmirian</span>
+  <button class="sms-btn" onclick="alert('Falta agregar el link del grupo de WhatsApp de Fabiola')">
+    <span class="sms-icon">💬</span><span>WhatsApp Fabiola</span>
   </button>
 </div>
-
-  <div class="wrap">
+<div class="wrap">
     <section class="hero">
       <h1>
         <span class="app-mark">D</span>
@@ -830,200 +829,162 @@
       </div>
     </div>
   </dialog>
-
-
   
   <dialog id="reciboModal">
-    <div class="modal-body" style="background:rgba(247,249,252,.96); padding:24px;">
+    <div class="modal-body" style="background:#f3f5f7; padding:24px;">
       <div id="reciboCard" style="
-        background:#ffffff;
-        border-radius:28px;
-        max-width:720px;
+        width:min(430px, 100%);
         margin:0 auto;
-        box-shadow:0 26px 60px rgba(17,35,72,.18);
+        background:#ffffff;
+        border:1px solid #dfe4ea;
+        border-radius:14px;
         overflow:hidden;
-        border:1px solid #d8e4f5;
-        position:relative;
+        box-shadow:0 18px 42px rgba(17,24,39,.12);
+        font-family:'Playfair Display', Georgia, 'Times New Roman', serif;
+        color:#111827;
+        text-transform:uppercase;
       ">
+
         <div style="
-          position:absolute; inset:0; pointer-events:none;
-          background:
-            radial-gradient(circle at top left, rgba(198,220,255,.28), transparent 22%),
-            radial-gradient(circle at bottom right, rgba(198,220,255,.18), transparent 20%);
-        "></div>
+          background:linear-gradient(180deg,#eaf2fb 0%,#f8fbff 100%);
+          border-bottom:1px solid #dbe3ec;
+          padding:28px 24px 24px;
+          text-align:center;
+        ">
+          <div style="
+            width:86px;
+            height:5px;
+            background:linear-gradient(90deg,#0f172a,#163a63,#64748b);
+            border-radius:999px;
+            margin:0 auto 16px;
+            opacity:.95;
+          "></div>
 
-        <div style="position:relative; padding:28px 34px 18px;">
-          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px;">
-            <div style="color:#2563eb; font-size:14px; line-height:12px; letter-spacing:6px; font-weight:900;">
-              • • • •<br>• • • •<br>• • • •
-            </div>
+          <div style="
+            font-size:30px;
+            line-height:1.05;
+            letter-spacing:.10em;
+            color:#163a63;
+            font-weight:800;
+          ">COMPROBANTE<br>DE PAGO</div>
 
-            <div style="text-align:center; flex:1;">
-              <div style="
-                width:82px; height:82px; margin:0 auto 10px;
-                border-radius:50%;
-                background:linear-gradient(135deg,#0d56d8,#1e5ea8);
-                display:flex; align-items:center; justify-content:center;
-                color:#fff; font-size:38px; font-weight:900;
-                box-shadow:0 10px 22px rgba(30,94,168,.22), inset 0 2px 0 rgba(255,255,255,.22);
-              ">◡</div>
-              <div style="font-size:20px; font-weight:900; color:#183a7a;">App Piscina</div>
+          <div id="reciboMes" style="
+            display:inline-block;
+            margin-top:16px;
+            background:#111827;
+            color:#ffffff;
+            padding:8px 15px;
+            border-radius:999px;
+            font-family:Inter, Segoe UI, Arial, sans-serif;
+            font-size:12px;
+            font-weight:800;
+            letter-spacing:.08em;
+            box-shadow:0 8px 18px rgba(17,24,39,.16);
+          ">MES: ENERO</div>
+        </div>
+
+        <div style="padding:22px 24px 24px; font-family:Inter, Segoe UI, Arial, sans-serif; letter-spacing:.04em;">
+          <div style="display:grid; gap:11px;">
+
+            <div style="
+              display:flex;
+              align-items:stretch;
+              background:#f9fafb;
+              border:1px solid #e5e7eb;
+              border-radius:8px;
+              overflow:hidden;
+              box-shadow:0 4px 12px rgba(17,24,39,.045);
+            ">
+              <div style="width:5px; background:#111827;"></div>
+              <div style="flex:1; padding:12px 14px; display:flex; justify-content:space-between; gap:14px;">
+                <span style="font-size:12px; font-weight:800; color:#374151;">PAGO TOTAL</span>
+                <span id="reciboPagoTotal" style="font-size:13px; font-weight:900; color:#111827;">$0.00</span>
+              </div>
             </div>
 
             <div style="
-              min-width:150px;
-              background:#fff;
-              border:1px solid #d9e6fb;
-              border-radius:18px;
-              padding:14px 16px;
-              box-shadow:0 8px 18px rgba(16,55,108,.10);
-              color:#2563eb;
-              font-weight:800;
-              font-size:16px;
-              text-align:left;
-            ">🛡️ Pago<br>Confirmado</div>
-          </div>
+              display:flex;
+              align-items:stretch;
+              background:#f9fafb;
+              border:1px solid #e5e7eb;
+              border-radius:8px;
+              overflow:hidden;
+              box-shadow:0 4px 12px rgba(17,24,39,.045);
+            ">
+              <div style="width:5px; background:#163a63;"></div>
+              <div style="flex:1; padding:12px 14px; display:flex; justify-content:space-between; gap:14px;">
+                <span style="font-size:12px; font-weight:800; color:#374151;">EXTRAS</span>
+                <span id="reciboExtras" style="font-size:13px; font-weight:900; color:#111827;">$0.00</span>
+              </div>
+            </div>
 
-          <div style="margin:16px auto 0; width:100%; display:flex; align-items:center; gap:14px;">
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
-            <div style="color:#6ea0ff; font-size:18px;">✦</div>
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
-          </div>
-
-          <div style="text-align:center; margin-top:18px;">
             <div style="
-              font-size:34px;
-              line-height:1.1;
-              font-weight:900;
-              letter-spacing:.04em;
-              color:#123b85;
-              text-transform:uppercase;
-            ">COMPROBANTE DE PAGO</div>
-          </div>
-
-          <div style="margin:14px auto 0; width:46%; display:flex; align-items:center; gap:14px;">
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
-            <div style="color:#6ea0ff; font-size:18px;">✦</div>
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
-          </div>
-
-          <div style="text-align:center; margin-top:18px;">
-            <div id="reciboNombre" style="
-              font-family:Georgia, 'Times New Roman', serif;
-              font-size:28px;
-              font-style:italic;
-              font-weight:500;
-              color:#21428a;
-            ">Fabiola</div>
-          </div>
-
-          <div style="text-align:center; margin-top:16px;">
-            <div id="reciboMes" style="
-              display:inline-flex;
-              align-items:center;
-              gap:10px;
-              padding:10px 20px;
-              border-radius:16px;
-              background:#edf4ff;
-              color:#1746a2;
-              font-size:16px;
-              font-weight:900;
-              letter-spacing:.02em;
-            ">📅 MES: ENERO 2026</div>
+              display:flex;
+              align-items:stretch;
+              background:#f9fafb;
+              border:1px solid #e5e7eb;
+              border-radius:8px;
+              overflow:hidden;
+              box-shadow:0 4px 12px rgba(17,24,39,.045);
+            ">
+              <div style="width:5px; background:#4b5563;"></div>
+              <div style="flex:1; padding:12px 14px; display:flex; justify-content:space-between; gap:14px;">
+                <span style="font-size:12px; font-weight:800; color:#374151;">DESCUENTO</span>
+                <span id="reciboDescuento" style="font-size:13px; font-weight:900; color:#111827;">$0.00</span>
+              </div>
+            </div>
           </div>
 
           <div style="
-            margin:26px auto 0;
-            background:#ffffff;
-            border:1px solid #e6eef9;
-            border-radius:22px;
-            box-shadow:0 8px 22px rgba(17,35,72,.06);
-            padding:14px 22px;
+            margin-top:18px;
+            display:flex;
+            align-items:stretch;
+            background:#eef4ff;
+            border:1px solid #c7d8ff;
+            border-radius:9px;
+            overflow:hidden;
+            box-shadow:0 8px 20px rgba(30,94,168,.10);
           ">
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:14px 0; border-bottom:1px dashed #dbe6f6;">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:56px;height:56px;border-radius:50%;background:#edf4ff;display:flex;align-items:center;justify-content:center;font-size:28px;">💸</div>
-                <div>
-                  <div style="font-size:18px; font-weight:900; color:#163a63;">PAGO TOTAL</div>
-                  <div style="font-size:14px; color:#64748b;">Pago correspondiente al mes</div>
-                </div>
-              </div>
-              <div id="reciboPagoTotal" style="font-size:22px; font-weight:900; color:#1d4ed8;">$0.00</div>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:16px 0; border-bottom:1px dashed #dbe6f6;">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:56px;height:56px;border-radius:50%;background:#e7f6e8;display:flex;align-items:center;justify-content:center;font-size:28px;">🎁</div>
-                <div>
-                  <div style="font-size:18px; font-weight:900; color:#15803d;">EXTRAS</div>
-                  <div style="font-size:14px; color:#64748b;">Pagos adicionales</div>
-                </div>
-              </div>
-              <div id="reciboExtras" style="font-size:22px; font-weight:900; color:#15803d;">$0.00</div>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; padding:16px 0;">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:56px;height:56px;border-radius:50%;background:#fde8e8;display:flex;align-items:center;justify-content:center;font-size:28px;">➖</div>
-                <div>
-                  <div style="font-size:18px; font-weight:900; color:#dc2626;">DESCUENTO</div>
-                  <div style="font-size:14px; color:#64748b;">Descuentos aplicados</div>
-                </div>
-              </div>
-              <div id="reciboDescuento" style="font-size:22px; font-weight:900; color:#dc2626;">$0.00</div>
-            </div>
-
-            <div style="
-              margin-top:12px;
-              background:linear-gradient(135deg,#0d56d8,#123b85);
-              border-radius:18px;
-              padding:16px 18px;
-              display:flex;
-              align-items:center;
-              justify-content:space-between;
-              gap:16px;
-              box-shadow:0 12px 24px rgba(13,86,216,.18);
-            ">
-              <div style="display:flex; align-items:center; gap:14px;">
-                <div style="width:60px;height:60px;border-radius:50%;border:2px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;">👛</div>
-                <div>
-                  <div style="font-size:20px; font-weight:900; color:#ffffff;">TOTAL PAGADO</div>
-                  <div style="font-size:14px; color:#dbeafe;">PAGO REALIZADO</div>
-                </div>
-              </div>
-              <div id="reciboTotalPagado" style="font-size:34px; font-weight:900; color:#ffffff; letter-spacing:.01em;">$0.00</div>
+            <div style="width:5px; background:#0f172a;"></div>
+            <div style="flex:1; padding:15px 14px; display:flex; justify-content:space-between; align-items:center; gap:14px;">
+              <span style="font-size:13px; font-weight:900; color:#163a63;">TOTAL PAGADO</span>
+              <span id="reciboTotalPagado" style="font-size:18px; font-weight:900; color:#0f172a;">$0.00</span>
             </div>
           </div>
 
           <div style="
             margin-top:24px;
-            display:grid;
-            grid-template-columns:1fr 1fr;
-            gap:18px;
-            align-items:center;
+            display:flex;
+            justify-content:space-between;
+            align-items:flex-end;
+            gap:16px;
           ">
-            <div style="display:flex; align-items:center; gap:14px;">
-              <div style="width:54px;height:54px;border-radius:50%;background:#edf4ff;display:flex;align-items:center;justify-content:center;font-size:26px;">📅</div>
-              <div>
-                <div style="font-size:14px; font-weight:900; color:#2563eb;">FECHA DE PAGO</div>
-                <div id="reciboFecha" style="font-size:18px; font-weight:800; color:#163a63; margin-top:3px;">-</div>
-              </div>
+            <div style="
+              color:#4b5563;
+              font-size:12px;
+              font-weight:700;
+              letter-spacing:.04em;
+              display:flex;
+              align-items:center;
+              gap:7px;
+              line-height:1.35;
+            ">
+              <span style="font-size:14px;">📅</span>
+              <span>
+                <span style="display:block; font-size:10px; color:#6b7280; letter-spacing:.10em;">FECHA DE PAGO</span>
+                <span id="reciboFecha" style="font-size:12px; color:#374151;">-</span>
+              </span>
             </div>
 
-            <div style="text-align:right; padding-right:8px;">
-              <div style="
-                font-family:Georgia, serif;
-                font-size:24px;
-                font-style:italic;
-                color:#1e40af;
-              ">Gracias</div>
-            </div>
-          </div>
-
-          <div style="margin:18px auto 0; width:100%; display:flex; align-items:center; gap:14px;">
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
-            <div style="color:#6ea0ff; font-size:18px;">✦</div>
-            <div style="height:2px; background:#d9e6fb; flex:1;"></div>
+            <div id="reciboNombre" style="
+              font-family:'Playfair Display', Georgia, 'Times New Roman', serif;
+              font-size:13px;
+              font-weight:700;
+              letter-spacing:.10em;
+              color:#374151;
+              text-align:right;
+              white-space:nowrap;
+            ">FABIOLA</div>
           </div>
         </div>
       </div>
@@ -1036,8 +997,7 @@
   </dialog>
 
 
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -1988,6 +1948,52 @@
     }
 
 
+    const WHATSAPP_GRUPOS = {
+      Asmirian: "https://chat.whatsapp.com/HUr6MoIpY94901OlV2foAz?mode=gi_t",
+      Fabiola: ""
+    };
+
+    async function crearArchivoRecibo(){
+      const card = $("reciboCard");
+      if(!card || typeof html2canvas === "undefined") return null;
+      const canvas = await html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#f4f6f8",
+        useCORS: true,
+        logging: false
+      });
+      const mes = ($("mesCierre")?.value || "mes").toLowerCase();
+      const nombre = (($("reciboNombre")?.textContent || "comprobante").trim() || "comprobante").toLowerCase();
+      const fileName = `comprobante-${nombre}-${mes}.png`;
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      if(!blob) return null;
+      return new File([blob], fileName, { type: "image/png" });
+    }
+
+    async function compartirReciboWhatsApp(){
+      try{
+        const file = await crearArchivoRecibo();
+        if(!file){
+          alert("No se pudo preparar el comprobante para compartir.");
+          return;
+        }
+
+        if(navigator.canShare && navigator.canShare({ files: [file] })){
+          await navigator.share({
+            files: [file],
+            title: "Comprobante de Pago",
+            text: "Comprobante de pago"
+          });
+          return;
+        }
+
+        alert("Este navegador no permite enviar la imagen directo. Usa 'Guardar / Compartir' y selecciona WhatsApp.");
+      }catch(err){
+        console.error(err);
+        alert("No se pudo compartir el comprobante por WhatsApp.");
+      }
+    }
+
     async function descargarReciboComoImagen(){
       const card = $("reciboCard");
       if(!card || typeof html2canvas === "undefined"){
@@ -2375,6 +2381,7 @@
     $("reciboAsmirianBtn")?.addEventListener("click", () => openReciboMensual("Asmirian"));
     $("cerrarReciboBtn")?.addEventListener("click", () => $("reciboModal").close());
     $("descargarReciboBtn")?.addEventListener("click", descargarReciboComoImagen);
+    $("enviarReciboWhatsAppBtn")?.addEventListener("click", compartirReciboWhatsApp);
     $("guardarNotaFabiolaBtn")?.addEventListener("click", () => guardarNotaEmpleado("Fabiola"));
     $("guardarNotaAsmirianBtn")?.addEventListener("click", () => guardarNotaEmpleado("Asmirian"));
     const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
