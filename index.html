@@ -315,6 +315,107 @@
       input,select,textarea{font-size:16px;}
       .hero h1{font-size:1.45rem; line-height:1.2}
     }
+
+
+/* ✨ Notas de empleadas - versión grande y elegante */
+.notas-empleadas-wow{
+  margin-top:18px;
+  background:linear-gradient(135deg, rgba(255,255,255,.98), rgba(239,247,255,.96));
+  border:1px solid rgba(219,231,255,.95);
+  position:relative;
+  overflow:hidden;
+}
+.notas-empleadas-wow::before{
+  content:"";
+  position:absolute;
+  inset:-90px -80px auto auto;
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(30,94,168,.16), transparent 68%);
+  pointer-events:none;
+}
+.notas-empleadas-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+  margin-bottom:16px;
+  position:relative;
+}
+.notas-empleadas-head h2{
+  color:#1e5ea8;
+  margin:0;
+  font-size:1.7rem;
+}
+.notas-empleadas-sub{
+  color:#6f7b88;
+  font-weight:700;
+  margin-top:5px;
+  font-size:.94rem;
+}
+.notas-empleadas-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  position:relative;
+}
+.nota-empleada-card{
+  background:linear-gradient(180deg,#ffffff,#f7fbff);
+  border:1px solid #dbe7ff;
+  border-radius:26px;
+  padding:18px;
+  box-shadow:0 14px 30px rgba(17,35,72,.08);
+}
+.nota-empleada-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:12px;
+}
+.nota-empleada-name{
+  color:#12365f;
+  font-size:1.15rem;
+  font-weight:900;
+  letter-spacing:.02em;
+}
+.nota-empleada-chip{
+  padding:7px 11px;
+  border-radius:999px;
+  background:#edf4ff;
+  color:#1e5ea8;
+  font-size:.78rem;
+  font-weight:900;
+  border:1px solid #dbe7ff;
+  white-space:nowrap;
+}
+.nota-empleada-card textarea{
+  min-height:260px !important;
+  border-radius:22px;
+  padding:16px;
+  font-size:1.02rem;
+  line-height:1.55;
+  background:linear-gradient(180deg,#ffffff,#fbfdff);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85);
+}
+.nota-empleada-card textarea:focus{
+  border-color:#1e5ea8;
+  box-shadow:0 0 0 4px rgba(30,94,168,.12), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.nota-empleada-fecha{
+  margin-top:11px;
+  font-size:.9rem;
+  color:#6f7b88;
+  font-weight:700;
+}
+.nota-empleada-card .actions{
+  margin-top:13px;
+}
+@media (max-width:900px){
+  .notas-empleadas-grid{grid-template-columns:1fr;}
+  .nota-empleada-card textarea{min-height:240px !important;}
+}
   </style>
 
 <style>
@@ -453,10 +554,10 @@
 
           <div class="field">
             <div class="mes-inline">
-              <label for="pagoMes" style="margin:0;">Detalle de Pago</label>
-              <button type="button" class="primary" id="btnPagoPiscina" style="min-width:190px; font-size:1rem;">Detalle de Pago</button>
+              <label for="pagoMes" style="margin:0;">Ingreso de la piscina</label>
+              <button type="button" class="primary" id="btnPagoPiscina" style="display:none; min-width:190px; font-size:1rem;">Ingreso de la piscina</button>
             </div>
-            <input id="pagoMes" type="number" min="0" step="0.01" placeholder="Se calcula automáticamente con extras por mes" />
+            <input id="pagoMes" type="number" min="0" step="0.01" placeholder="Ej. 500 - ingreso privado de esta piscina" />
           </div>
 
           <div class="field full">
@@ -494,31 +595,29 @@
         </div>
       </aside>
 
-      <div class="card" style="margin-top:18px;">
+      <div class="card" style="margin-top:18px; grid-column:1/-1;">
         <h2 style="color:#1e5ea8; margin:0 0 12px; font-size:1.6rem;">📝 Notas Importantes</h2>
         <textarea id="notasGenerales" placeholder="Escribe aquí tus notas importantes..."
           style="width:100%; min-height:140px; border-radius:18px; padding:14px; border:1px solid var(--line); font-size:1rem;"></textarea>
       </div>
 
-      <div class="card" style="margin-top:18px; background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,251,255,.96));">
-        <h2 style="color:#1e5ea8; margin:0 0 14px; font-size:1.6rem;">📝 Notas 📎</h2>
-        <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr));">
-          <div class="stat" style="background:linear-gradient(180deg,#ffffff,#f8fbff);">
-            <div class="k" style="color:#1e5ea8;">Fabiola</div>
-            <textarea id="notaFabiolaInput" placeholder="Escribe una nota para Fabiola..." style="min-height:120px;"></textarea>
-            <div style="margin-top:10px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaFabiolaFecha">-</span></div>
-            <div class="actions" style="margin-top:12px;">
-              <button class="primary" id="guardarNotaFabiolaBtn" type="button">💾 Guardar nota Fabiola</button>
-            </div>
-          </div>
-          <div class="stat" style="background:linear-gradient(180deg,#ffffff,#f8fbff);">
-            <div class="k" style="color:#1e5ea8;">Asmirian</div>
-            <textarea id="notaAsmirianInput" placeholder="Escribe una nota para Asmirian..." style="min-height:120px;"></textarea>
-            <div style="margin-top:10px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaAsmirianFecha">-</span></div>
-            <div class="actions" style="margin-top:12px;">
-              <button class="primary" id="guardarNotaAsmirianBtn" type="button">💾 Guardar nota Asmirian</button>
-            </div>
-          </div>
+      <div class="card" style="margin-top:18px; grid-column:1/-1;">
+        <h2 style="color:#1e5ea8; margin:0 0 12px; font-size:1.6rem;">📝 Notas Fabiola</h2>
+        <textarea id="notaFabiolaInput" placeholder="Escribe aquí todo lo de Fabiola..."
+          style="width:100%; min-height:160px; border-radius:18px; padding:14px; border:1px solid var(--line); font-size:1rem;"></textarea>
+        <div style="margin-top:8px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaFabiolaFecha">-</span></div>
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" id="guardarNotaFabiolaBtn" type="button">💾 Guardar nota Fabiola</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:18px; grid-column:1/-1;">
+        <h2 style="color:#1e5ea8; margin:0 0 12px; font-size:1.6rem;">📝 Notas Asmirian</h2>
+        <textarea id="notaAsmirianInput" placeholder="Escribe aquí todo lo de Asmirian..."
+          style="width:100%; min-height:160px; border-radius:18px; padding:14px; border:1px solid var(--line); font-size:1rem;"></textarea>
+        <div style="margin-top:8px; font-size:.9rem; color:#6f7b88;">Última actualización: <span id="notaAsmirianFecha">-</span></div>
+        <div class="actions" style="margin-top:10px;">
+          <button class="primary" id="guardarNotaAsmirianBtn" type="button">💾 Guardar nota Asmirian</button>
         </div>
       </div>
 
@@ -535,6 +634,7 @@
       <option value="julio">Julio</option><option value="agosto">Agosto</option><option value="septiembre">Septiembre</option>
       <option value="octubre">Octubre</option><option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
     </select>
+    <button class="secondary" id="sugerirCierreBtn" type="button">💡 Sugerir total del mes</button>
     <button class="primary" id="guardarCierreBtn" type="button">Guardar Cierre</button>
   </div>
 
@@ -626,6 +726,7 @@
         <option value="Asmirian">Asmirian</option>
       </select>
       <button class="secondary" id="exportBtn">Exportar respaldo</button>
+      <button class="primary" id="historialExtrasBtn" type="button">📊 Historial de Extras</button>
     </section>
 
     <section class="card">
@@ -657,6 +758,28 @@
 
     <div class="foot">Hecha para Fabiola y Asmirian · Versión elegante de uso privado para control y seguimiento.</div>
   </div>
+
+
+
+  <dialog id="historialExtrasModal">
+    <div class="modal-head">
+      <h3 style="margin:0;">📊 Historial de Extras</h3>
+    </div>
+    <div class="modal-body">
+      <p class="muted" style="margin-top:0;">Extras organizados por mes y por piscina.</p>
+
+      <div class="actions" style="margin-top:0; margin-bottom:16px;">
+        <button class="primary" id="verExtrasPorMesBtn" type="button">📅 Ver por Mes</button>
+        <button class="secondary" id="verExtrasPorPiscinaBtn" type="button">🏊 Ver por Piscina</button>
+      </div>
+
+      <div id="historialExtrasContenido" style="display:grid; gap:14px;"></div>
+
+      <div class="actions" style="margin-top:18px;">
+        <button class="secondary" id="cerrarHistorialExtrasBtn" type="button">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
 
 
   <dialog id="paymentModal">
@@ -1051,6 +1174,8 @@
           <input id="${m}Ganancia" type="number" min="0" step="0.01" />
           <label for="${m}Seguro">Extras</label>
           <input id="${m}Seguro" type="number" min="0" step="0.01" />
+          <label for="${m}Nota">Nota del extra</label>
+          <textarea id="${m}Nota" placeholder="Ej. limpieza profunda, químico extra, piscina verde..." style="min-height:82px;"></textarea>
           <label for="${m}Fecha">Fecha de Pago</label>
           <input id="${m}Fecha" type="date" />
           <div class="month-summary"><span class="total-mes-highlight">💵 Total: <span id="${m}TotalGeneral">$0.00</span></span></div>
@@ -1062,29 +1187,46 @@
 
     function buildYearlyPayments(){
       const data = {};
+      const ingresoPiscina = Number(fields.pagoMes.value || 0);
+
       yearMonths.forEach(m => {
+        const extraValor = $(m + "Seguro")?.value ?? "";
+        const notaValor = $(m + "Nota")?.value ?? "";
+        const fechaValor = $(m + "Fecha")?.value ?? "";
+
+        const extra = extraValor === "" ? 0 : Number(extraValor || 0);
+        const nota = String(notaValor || "").trim();
+        const fecha = fechaValor || "";
+
         data[m] = {
-          piscina: Number($(m + "Piscina").value || 0),
-          fabiola: Number($(m + "Fabiola").value || 0),
-          asmirian: Number($(m + "Asmirian").value || 0),
-          ganancia: Number($(m + "Ganancia").value || 0),
-          seguro: Number($(m + "Seguro")?.value || 0),
-          extra: Number((((buildMonths()||{})[m]||{}).extra) || 0),
-          fecha: $(m + "Fecha")?.value || "",
-          nota: ""
+          piscina: ingresoPiscina,
+          fabiola: 0,
+          pagoFabiola: 0,
+          asmirian: 0,
+          pagoAsmirian: 0,
+          pago: 0,
+          ganancia: Number($(m + "Ganancia")?.value || 0),
+          seguro: extra,
+          extra: extra,
+          fecha: fecha,
+          nota: nota,
+          notaExtra: nota
         };
       });
+
       return data;
     }
 
     function refreshEachMonthTotal(){
-      const data = buildYearlyPayments();
-      const emp = fields.empleada.value === "Asmirian" ? "asmirian" : "fabiola";
       yearMonths.forEach(m => {
-        const it = data[m] || {};
-        const total = Number(it[emp] || 0) + Number(it.seguro || 0);
+        const pagoManual =
+          Number($(m + "Fabiola")?.value || 0) ||
+          Number($(m + "Asmirian")?.value || 0);
+
+        const extra = Number($(m + "Seguro")?.value || 0);
         const el = $(m + "TotalGeneral");
-        if (el) el.textContent = money(total);
+
+        if (el) el.textContent = money(pagoManual + extra);
       });
     }
 
@@ -1101,12 +1243,12 @@
       yearMonths.forEach(m => {
         const item = yearlyPayments[m] || {};
         $(m + "Piscina").value = item.piscina ?? "";
-        $(m + "Fabiola").value = (item.fabiola ?? item.pagoFabiola ?? item.pago ?? "");
-        $(m + "Asmirian").value = (item.asmirian ?? item.pagoAsmirian ?? item.pago ?? "");
+        $(m + "Fabiola").value = (item.fabiola ?? item.pagoFabiola ?? "");
+        $(m + "Asmirian").value = (item.asmirian ?? item.pagoAsmirian ?? "");
         $(m + "Ganancia").value = item.ganancia ?? "";
         if($(m + "Seguro")) $(m + "Seguro").value = (item.seguro ?? item.extra ?? "");
         if($(m + "Fecha")) $(m + "Fecha").value = item.fecha ?? "";
-        if($(m + "Nota")) $(m + "Nota").value = item.nota ?? "";
+        if($(m + "Nota")) $(m + "Nota").value = item.nota ?? item.notaExtra ?? "";
       });
       refreshEachMonthTotal();
     }
@@ -1291,45 +1433,107 @@
     }
 
 
-    function buildYearlyPaymentsSafe(existing = {}){
+
+    function pagoManualLimpio(valor, r){
+      const n = Number(valor || 0);
+      const privado = Number(r?.pagoMes || 0);
+      if(privado > 0 && n === privado) return 0;
+      return n;
+    }
+
+    function buildYearlyPaymentsDetalleSeparado(existing = {}, record = {}){
       const data = {};
+      const emp = String(record.empleada || fields.empleada.value || "").trim();
+      const ingresoPiscina = Number(record.pagoMes || 0);
+
       yearMonths.forEach(m => {
         const prev = existing[m] || {};
-        const pagoFabiola = Number($(m + "Fabiola")?.value || prev.fabiola || prev.pagoFabiola || prev.pago || 0);
-        const pagoAsmirian = Number($(m + "Asmirian")?.value || prev.asmirian || prev.pagoAsmirian || prev.pago || 0);
-        const extraSeguro = Number($(m + "Seguro")?.value || prev.seguro || prev.extra || 0);
+
+        const extraValor = $(m + "Seguro")?.value ?? "";
+        const notaValor = $(m + "Nota")?.value ?? "";
+        const fechaValor = $(m + "Fecha")?.value ?? "";
+
+        const extra = extraValor === "" ? 0 : Number(extraValor || 0);
+        const nota = String(notaValor || "").trim();
+        const fecha = fechaValor || "";
+
+        const pagoFabiola = pagoManualLimpio(Number($(m + "Fabiola")?.value || 0), record);
+        const pagoAsmirian = pagoManualLimpio(Number($(m + "Asmirian")?.value || 0), record);
+        const pagoEmpleado = emp === "Fabiola" ? pagoFabiola : pagoAsmirian;
 
         data[m] = {
-          piscina: Number($(m + "Piscina")?.value || prev.piscina || 0),
-          fabiola: pagoFabiola,
-          pagoFabiola: pagoFabiola,
-          asmirian: pagoAsmirian,
-          pagoAsmirian: pagoAsmirian,
-          pago: pagoFabiola || pagoAsmirian || 0,
-          ganancia: Number($(m + "Ganancia")?.value || prev.ganancia || 0),
-          seguro: extraSeguro,
-          extra: extraSeguro,
-          fecha: $(m + "Fecha")?.value || prev.fecha || "",
-          nota: prev.nota || ""
+          ...prev,
+          piscina: ingresoPiscina || Number(prev.piscina || 0),
+          fabiola: emp === "Fabiola" ? pagoFabiola : 0,
+          pagoFabiola: emp === "Fabiola" ? pagoFabiola : 0,
+          asmirian: emp === "Asmirian" ? pagoAsmirian : 0,
+          pagoAsmirian: emp === "Asmirian" ? pagoAsmirian : 0,
+          pago: pagoEmpleado,
+          seguro: extra,
+          extra: extra,
+          fecha: fecha,
+          nota: nota,
+          notaExtra: nota
         };
       });
+
+      return data;
+    }
+
+    function buildYearlyPaymentsSafe(existing = {}){
+      const data = {};
+      const pagoFijo = Number(fields.pagoMes.value || 0);
+      const emp = String(fields.empleada.value || "").trim();
+
+      yearMonths.forEach(m => {
+        const prev = existing[m] || {};
+
+        // IMPORTANTE:
+        // Si borras Extra, Nota o Fecha, se guarda vacío/0 de verdad.
+        // Ya no recupera el valor viejo.
+        const extraValor = $(m + "Seguro")?.value ?? "";
+        const notaValor = $(m + "Nota")?.value ?? "";
+        const fechaValor = $(m + "Fecha")?.value ?? "";
+
+        const extra = extraValor === "" ? 0 : Number(extraValor || 0);
+        const nota = String(notaValor || "").trim();
+        const fecha = fechaValor || "";
+
+        data[m] = {
+          piscina: pagoFijo,
+          fabiola: emp === "Fabiola" ? pagoFijo : 0,
+          pagoFabiola: emp === "Fabiola" ? pagoFijo : 0,
+          asmirian: emp === "Asmirian" ? pagoFijo : 0,
+          pagoAsmirian: emp === "Asmirian" ? pagoFijo : 0,
+          pago: pagoFijo,
+          ganancia: Number($(m + "Ganancia")?.value || prev.ganancia || 0),
+          seguro: extra,
+          extra: extra,
+          fecha: fecha,
+          nota: nota,
+          notaExtra: nota
+        };
+      });
+
       return data;
     }
 
     async function savePaymentDetails(){
-      fields.pagoMes.dataset.touched = "";
-      refreshPagoPiscinaTotal();
       if(editingId){
         const idx = registros.findIndex(x => x.id === editingId);
         if(idx >= 0){
           const actual = registros[idx];
-          actual.yearlyPayments = buildYearlyPaymentsSafe(actual.yearlyPayments || {});
-          actual.pagoMes = Number(fields.pagoMes.value || 0);
+
+          // Guarda solo Pago/Extra/Fecha/Nota mensual.
+          // No modifica el Ingreso de la piscina del formulario.
+          actual.yearlyPayments = buildYearlyPaymentsDetalleSeparado(actual.yearlyPayments || {}, actual);
+
           await setDoc(doc(db, "piscinas", actual.id), actual);
           registros[idx] = actual;
           render();
         }
       }
+
       $("paymentModal").close();
     }
 
@@ -1423,10 +1627,36 @@
       $("monthModal").close();
     }
 
+
+    function obtenerPagoFijoRegistro(r){
+      const directo = Number(r?.pagoMes || 0);
+      if(directo > 0) return directo;
+
+      const pagos = r?.yearlyPayments || {};
+      for(const m of yearMonths){
+        const it = pagos[m] || {};
+        const posible = Number(
+          it.pago ??
+          it.fabiola ??
+          it.asmirian ??
+          it.pagoFabiola ??
+          it.pagoAsmirian ??
+          it.piscina ??
+          0
+        );
+        if(posible > 0) return posible;
+      }
+      return 0;
+    }
+
     function showMonthSummary(id){
       const r = registros.find(x => x.id === id);
       if(!r) return;
       editingId = id;
+
+      // Detalle mensual independiente del Ingreso de la piscina.
+      fields.empleada.value = r.empleada || fields.empleada.value;
+
       loadYearlyPaymentsToModal(r.yearlyPayments || {});
 
       const cards = $("yearPaymentGrid") ? $("yearPaymentGrid").querySelectorAll(".month-card") : [];
@@ -1466,16 +1696,19 @@
         }
         const actual = ((r.yearlyPayments || {})[m]) || {};
         const extraGuardado = Number(actual.seguro ?? actual.extra ?? 0);
-        const pagoGuardado = Number(
-          actual.fabiola ??
-          actual.asmirian ??
-          actual.pagoFabiola ??
-          actual.pagoAsmirian ??
-          actual.pago ??
-          0
+        const pagoGuardado = pagoManualLimpio(
+          ((r.empleada || "").trim() === "Fabiola")
+            ? (actual.fabiola ?? actual.pagoFabiola ?? 0)
+            : (actual.asmirian ?? actual.pagoAsmirian ?? 0),
+          r
         );
 
         if(seg) seg.value = extraGuardado ? extraGuardado : "";
+        if($(m + "Nota")) $(m + "Nota").value = actual.nota ?? actual.notaExtra ?? "";
+
+        if(fab) fab.value = "";
+        if(asm) asm.value = "";
+
         if((r.empleada || "").trim() === "Fabiola"){
           if(fab) fab.value = pagoGuardado ? pagoGuardado : "";
         } else {
@@ -1523,6 +1756,7 @@
 
       if(id && field){
         $("modalLabel").style.display = "block";
+        $("modalLabel").textContent = field === "notasAsmirian" ? "Notas para Asmirian" : (field === "notasFabiola" ? "Notas para Fabiola" : "Contenido");
         $("modalTextarea").style.display = "block";
         $("modalTextarea").value = text || "";
         $("saveModalBtn").style.display = "inline-block";
@@ -1571,6 +1805,88 @@
 
     function setCierreStore(data){
       localStorage.setItem(CIERRE_KEY, JSON.stringify(data));
+    }
+
+    function obtenerPagoEmpleadoDelMes(r, mes){
+      const it = (r.yearlyPayments || {})[mes] || {};
+      const emp = String(r.empleada || "").trim();
+      const pagoEmpleado = emp === "Fabiola"
+        ? Number(it.fabiola ?? it.pagoFabiola ?? 0)
+        : Number(it.asmirian ?? it.pagoAsmirian ?? 0);
+
+      return pagoEmpleado > 0
+        ? pagoEmpleado
+        : Number(it.pago || obtenerPagoFijoRegistro(r) || r.pagoMes || 0);
+    }
+
+    function obtenerExtraDelMes(r, mes){
+      const it = (r.yearlyPayments || {})[mes] || {};
+      return Number(it.extra ?? it.seguro ?? 0);
+    }
+
+    function sugerirTotalesCierreMes(){
+      const mes = $("mesCierre")?.value || "enero";
+      let fabiolaTotal = 0;
+      let fabiolaExtras = 0;
+      let asmirianTotal = 0;
+      let asmirianExtras = 0;
+
+      registros.forEach(r => {
+        const emp = String(r.empleada || "").trim();
+        const pago = obtenerPagoEmpleadoDelMes(r, mes);
+        const extra = obtenerExtraDelMes(r, mes);
+
+        if(emp === "Fabiola"){
+          fabiolaTotal += pago;
+          fabiolaExtras += extra;
+        }
+        if(emp === "Asmirian"){
+          asmirianTotal += pago;
+          asmirianExtras += extra;
+        }
+      });
+
+      const fabiolaSeguro = Number($("cierreFabiolaSeguro")?.value || 0);
+      const asmirianSeguro = Number($("cierreAsmirianSeguro")?.value || 0);
+
+      $("cierreFabiolaTotal").value = fabiolaTotal ? fabiolaTotal.toFixed(2) : "";
+      $("cierreFabiolaExtras").value = fabiolaExtras ? fabiolaExtras.toFixed(2) : "";
+      $("cierreFabiolaDepositar").value = (fabiolaTotal + fabiolaExtras - fabiolaSeguro).toFixed(2);
+
+      $("cierreAsmirianTotal").value = asmirianTotal ? asmirianTotal.toFixed(2) : "";
+      $("cierreAsmirianExtras").value = asmirianExtras ? asmirianExtras.toFixed(2) : "";
+      $("cierreAsmirianDepositar").value = (asmirianTotal + asmirianExtras - asmirianSeguro).toFixed(2);
+
+      alert(`Sugerencia de ${mes} lista. Revísala antes de guardar el cierre.`);
+    }
+
+    let ultimoBackupAutomatico = "";
+    let backupTimer = null;
+
+    function programarBackupAutomatico(){
+      clearTimeout(backupTimer);
+      backupTimer = setTimeout(guardarBackupAutomatico, 1200);
+    }
+
+    async function guardarBackupAutomatico(){
+      try{
+        const contenido = JSON.stringify(registros || []);
+        if(!contenido || contenido === ultimoBackupAutomatico) return;
+        ultimoBackupAutomatico = contenido;
+
+        const ahora = new Date();
+        const mesBackup = `${ahora.getFullYear()}_${String(ahora.getMonth() + 1).padStart(2, "0")}`;
+        const respaldo = {
+          registros,
+          totalRegistros: registros.length,
+          actualizadoEn: ahora.toISOString()
+        };
+
+        await setDoc(doc(db, "backups_automaticos", "ultimo_respaldo"), respaldo);
+        await setDoc(doc(db, "backups_automaticos", `respaldo_${mesBackup}`), respaldo);
+      }catch(error){
+        console.error("No se pudo guardar el backup automático:", error);
+      }
     }
 
     function loadCierreMes(){
@@ -1844,6 +2160,118 @@
       $("resumenGeneral").textContent = money(totalFabiola + totalAsmirian);
     }
 
+
+    function getExtrasData(){
+      const labels = {
+        enero:"Enero", febrero:"Febrero", marzo:"Marzo", abril:"Abril",
+        mayo:"Mayo", junio:"Junio", julio:"Julio", agosto:"Agosto",
+        septiembre:"Septiembre", octubre:"Octubre", noviembre:"Noviembre", diciembre:"Diciembre"
+      };
+
+      const items = [];
+      registros.forEach(r => {
+        const pagos = r.yearlyPayments || {};
+        yearMonths.forEach(m => {
+          const it = pagos[m] || {};
+          const extra = Number(it.seguro ?? it.extra ?? 0);
+          const nota = String(it.nota ?? it.notaExtra ?? "").trim();
+          const fecha = it.fecha || "-";
+          if(extra > 0){
+            items.push({
+              mes: m,
+              mesLabel: labels[m] || m,
+              piscina: r.nombrePiscina || "Piscina sin nombre",
+              empleada: r.empleada || "-",
+              extra,
+              nota,
+              fecha
+            });
+          }
+        });
+      });
+      return items;
+    }
+
+    function cardExtra(item){
+      return `
+        <div style="
+          background:#ffffff;
+          border:1px solid #e6eef8;
+          border-radius:18px;
+          padding:14px 16px;
+          box-shadow:0 8px 18px rgba(17,35,72,.06);
+        ">
+          <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+            <div>
+              <div style="font-weight:900; color:#12365f;">${escapeHtml(item.piscina)}</div>
+              <div style="font-size:.9rem; color:#6f7b88; margin-top:4px;">${escapeHtml(item.empleada)} · ${escapeHtml(item.fecha)}</div>
+            </div>
+            <div style="font-weight:900; color:#15803d; white-space:nowrap;">${money(item.extra)}</div>
+          </div>
+          ${item.nota ? `<div style="margin-top:10px; color:#243142; line-height:1.5;"><strong>Nota:</strong> ${escapeHtml(item.nota)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function renderHistorialExtras(modo = "mes"){
+      const cont = $("historialExtrasContenido");
+      if(!cont) return;
+
+      const items = getExtrasData();
+      if(!items.length){
+        cont.innerHTML = `<div class="empty">Todavía no hay extras guardados.</div>`;
+        return;
+      }
+
+      if(modo === "piscina"){
+        const grupos = {};
+        items.forEach(item => {
+          if(!grupos[item.piscina]) grupos[item.piscina] = [];
+          grupos[item.piscina].push(item);
+        });
+
+        cont.innerHTML = Object.keys(grupos).sort().map(piscina => `
+          <div style="
+            background:linear-gradient(180deg,#ffffff,#f8fbff);
+            border:1px solid #dbe7ff;
+            border-radius:22px;
+            padding:16px;
+          ">
+            <h3 style="margin:0 0 12px; color:#1e5ea8;">🏊 ${escapeHtml(piscina)}</h3>
+            <div style="display:grid; gap:10px;">
+              ${grupos[piscina].map(cardExtra).join("")}
+            </div>
+          </div>
+        `).join("");
+        return;
+      }
+
+      const grupos = {};
+      items.forEach(item => {
+        if(!grupos[item.mes]) grupos[item.mes] = [];
+        grupos[item.mes].push(item);
+      });
+
+      cont.innerHTML = yearMonths.filter(m => grupos[m]).map(m => `
+        <div style="
+          background:linear-gradient(180deg,#ffffff,#f8fbff);
+          border:1px solid #dbe7ff;
+          border-radius:22px;
+          padding:16px;
+        ">
+          <h3 style="margin:0 0 12px; color:#1e5ea8;">📅 ${escapeHtml(grupos[m][0].mesLabel)}</h3>
+          <div style="display:grid; gap:10px;">
+            ${grupos[m].map(cardExtra).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function abrirHistorialExtras(){
+      renderHistorialExtras("mes");
+      $("historialExtrasModal").showModal();
+    }
+
     function render(){
       const q = $("searchInput").value.trim().toLowerCase();
       const empleadoFiltro = $("filterEmpleado").value;
@@ -1856,6 +2284,14 @@
         const matchText = !q || text.includes(q);
         const matchEmpleado = !empleadoFiltro || r.empleada === empleadoFiltro;
         return matchText && matchEmpleado;
+      });
+
+      filtrados.sort((a, b) => {
+        const orden = { Fabiola: 1, Asmirian: 2 };
+        const empA = orden[a.empleada] || 99;
+        const empB = orden[b.empleada] || 99;
+        if(empA !== empB) return empA - empB;
+        return String(a.nombrePiscina || "").localeCompare(String(b.nombrePiscina || ""), "es");
       });
 
       $("tbody").innerHTML = filtrados.map(r => `
@@ -1873,7 +2309,13 @@
           
           <td><button class="secondary" onclick="window.showMonthSummary('${r.id}')">Detalle de Pago</button></td>
           
-          <td><button class="secondary" onclick="window.editNotes('${r.id}')">Agregar notas</button></td>
+          <td>
+            <div class="mini-actions">
+              <button class="secondary" onclick="window.editNotes('${r.id}')">Notas privadas</button>
+              ${r.empleada === "Asmirian" ? `<button class="secondary" onclick="window.editNotesAsmirian('${r.id}')">Notas para Asmirian</button>` : ""}
+              ${r.empleada === "Fabiola" ? `<button class="secondary" onclick="window.editNotesFabiola('${r.id}')">Notas para Fabiola</button>` : ""}
+            </div>
+          </td>
           <td>
             <div class="mini-actions">
               <button class="warning" onclick="window.editRecord('${r.id}')">Editar información</button>
@@ -1893,10 +2335,28 @@
     function editNotes(id){
       const r = registros.find(x => x.id === id);
       if(!r) return;
-      showText(`Notas de ${r.nombrePiscina}`, r.notas || "", r.id, "notas");
+      showText(`Notas privadas de ${r.nombrePiscina}`, r.notas || "", r.id, "notas");
     }
 
-    $("btnPagoPiscina").addEventListener("click", openPaymentModal);
+    function editNotesAsmirian(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+
+      // Estas notas son las que verá Asmirian en su app.
+      // No se mezclan con tus notas privadas.
+      showText(`Notas para Asmirian - ${r.nombrePiscina}`, r.notasAsmirian || "", r.id, "notasAsmirian");
+    }
+
+    function editNotesFabiola(id){
+      const r = registros.find(x => x.id === id);
+      if(!r) return;
+
+      // Estas notas son las que verá Fabiola en su app.
+      // No se mezclan con tus notas privadas.
+      showText(`Notas para Fabiola - ${r.nombrePiscina}`, r.notasFabiola || "", r.id, "notasFabiola");
+    }
+
+    $("btnPagoPiscina").addEventListener("click", () => {});
     $("savePaymentBtn").addEventListener("click", savePaymentDetails);
     $("closePaymentBtn").addEventListener("click", () => $("paymentModal").close());
     $("saveBtn").addEventListener("click", saveRecord);
@@ -1909,6 +2369,7 @@
     $("filterEmpleado").addEventListener("change", render);
     $("mesResumen")?.addEventListener("change", renderResumenMes);
     $("mesCierre")?.addEventListener("change", loadCierreMes);
+    $("sugerirCierreBtn")?.addEventListener("click", sugerirTotalesCierreMes);
     $("guardarCierreBtn")?.addEventListener("click", saveCierreMes);
     $("reciboFabiolaBtn")?.addEventListener("click", () => openReciboMensual("Fabiola"));
     $("reciboAsmirianBtn")?.addEventListener("click", () => openReciboMensual("Asmirian"));
@@ -1918,11 +2379,16 @@
     $("guardarNotaAsmirianBtn")?.addEventListener("click", () => guardarNotaEmpleado("Asmirian"));
     const empEl = document.getElementById("empleada"); if(empEl){ empEl.addEventListener("change", applyEmployeeVisibility);} 
     $("exportBtn").addEventListener("click", exportData);
+    $("historialExtrasBtn")?.addEventListener("click", abrirHistorialExtras);
+    $("verExtrasPorMesBtn")?.addEventListener("click", () => renderHistorialExtras("mes"));
+    $("verExtrasPorPiscinaBtn")?.addEventListener("click", () => renderHistorialExtras("piscina"));
+    $("cerrarHistorialExtrasBtn")?.addEventListener("click", () => $("historialExtrasModal").close());
     $("saveModalBtn").addEventListener("click", saveModalEdit);
     $("closeModalBtn").addEventListener("click", () => {
       const old = document.getElementById("modalPreview");
       if(old) old.remove();
       $("modalLabel").style.display = "block";
+      $("modalLabel").textContent = "Contenido";
       $("modalTextarea").style.display = "block";
       $("notesModal").close();
     });
@@ -1937,15 +2403,19 @@
     window.showYearlyPaymentSummary = showYearlyPaymentSummary;
     window.showPagosExtras = showPagosExtras;
     window.editNotes = editNotes;
+    window.editNotesAsmirian = editNotesAsmirian;
+    window.editNotesFabiola = editNotesFabiola;
     window.openReciboMensual = openReciboMensual;
     window.descargarReciboComoImagen = descargarReciboComoImagen;
     window.guardarNotaEmpleado = guardarNotaEmpleado;
+    window.abrirHistorialExtras = abrirHistorialExtras;
 
     onSnapshot(collection(db, "piscinas"), (snapshot) => {
       registros = snapshot.docs.map(d => d.data());
       render();
       renderResumenMes();
       loadCierreMes();
+      programarBackupAutomatico();
     }, (error) => console.error("Error al sincronizar:", error));
 
     createYearPaymentCards(); setTimeout(applyEmployeeVisibility, 0);
