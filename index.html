@@ -416,7 +416,133 @@
   .notas-empleadas-grid{grid-template-columns:1fr;}
   .nota-empleada-card textarea{min-height:240px !important;}
 }
-  </style>
+  
+/* 🌈 Plan semanal premium */
+#agendaSemanal{
+  background:linear-gradient(135deg, rgba(255,255,255,.96), rgba(239,247,255,.92));
+  border:1px solid rgba(219,231,255,.95);
+  overflow:hidden;
+}
+#agendaGrid{
+  scroll-snap-type:x proximity;
+}
+#agendaGrid::-webkit-scrollbar{height:8px;}
+#agendaGrid::-webkit-scrollbar-thumb{background:#c7d8ff;border-radius:999px;}
+.agenda-dia{
+  border:1px solid rgba(219,231,255,.92);
+  border-radius:16px;
+  padding:8px;
+  min-width:148px;
+  max-width:165px;
+  flex:0 0 148px;
+  scroll-snap-align:start;
+  box-shadow:0 10px 22px rgba(17,35,72,.07);
+  position:relative;
+  overflow:hidden;
+}
+.agenda-dia::before{
+  content:"";
+  position:absolute;
+  inset:-45px -45px auto auto;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:rgba(255,255,255,.38);
+  pointer-events:none;
+}
+.agenda-dia h4{
+  margin:0 0 7px;
+  font-size:.72rem;
+  color:#163a63;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  position:relative;
+}
+.agenda-count{
+  font-size:.62rem;
+  font-weight:900;
+  padding:3px 7px;
+  border-radius:999px;
+  background:rgba(255,255,255,.72);
+  color:#163a63;
+  border:1px solid rgba(255,255,255,.9);
+}
+.agenda-item{
+  padding:6px 7px;
+  border-radius:11px;
+  font-size:.67rem;
+  font-weight:800;
+  margin-bottom:5px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  line-height:1.16;
+  position:relative;
+  border:1px solid rgba(255,255,255,.7);
+  box-shadow:0 5px 12px rgba(17,35,72,.045);
+}
+.agenda-piscina-nombre{
+  white-space:normal;
+  overflow:visible;
+  text-overflow:clip;
+  word-break:break-word;
+}
+.agenda-empleada-mini{
+  font-size:.58rem;
+  opacity:.88;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+.agenda-empty{
+  font-size:.68rem;
+  color:#6f7b88;
+  font-weight:800;
+  background:rgba(255,255,255,.52);
+  border:1px dashed rgba(111,123,136,.25);
+  border-radius:11px;
+  padding:8px;
+  position:relative;
+}
+.agenda-lunes{background:linear-gradient(180deg,#eef7ff,#ffffff);}
+.agenda-martes{background:linear-gradient(180deg,#f0fdf4,#ffffff);}
+.agenda-miercoles{background:linear-gradient(180deg,#fff7ed,#ffffff);}
+.agenda-jueves{background:linear-gradient(180deg,#f5f3ff,#ffffff);}
+.agenda-viernes{background:linear-gradient(180deg,#fdf2f8,#ffffff);}
+.agenda-sabado{background:linear-gradient(180deg,#ecfeff,#ffffff);}
+.agenda-domingo{background:linear-gradient(180deg,#fefce8,#ffffff);}
+.agenda-hoy{
+  border:2px solid #1e5ea8;
+  box-shadow:0 16px 34px rgba(30,94,168,.22), 0 0 0 4px rgba(30,94,168,.10);
+  transform:translateY(-2px);
+}
+.agenda-hoy h4::before{
+  content:"HOY";
+  font-size:.55rem;
+  color:#fff;
+  background:linear-gradient(135deg,#12365f,#1e5ea8);
+  border-radius:999px;
+  padding:3px 7px;
+  margin-right:4px;
+  box-shadow:0 6px 12px rgba(18,54,95,.18);
+}
+.agenda-fabiola{
+  background:rgba(238,244,255,.9);
+  color:#1e5ea8;
+}
+.agenda-asmirian{
+  background:rgba(243,232,255,.9);
+  color:#7c3aed;
+}
+@media (max-width:720px){
+  .agenda-dia{min-width:142px; flex-basis:142px; max-width:158px;}
+  .agenda-item{font-size:.65rem;}
+}
+
+</style>
 
 <style>
 .sms-btn {
@@ -470,6 +596,63 @@
   0% { opacity: 0.95; transform: scale(0.2); }
   100% { opacity: 0; transform: scale(1.4); }
 }
+
+.agenda-dia{
+  background:#ffffff;
+  border:1px solid #dbe7ff;
+  border-radius:14px;
+  padding:8px;
+  min-width:155px;
+  max-width:180px;
+  flex:0 0 155px;
+}
+.agenda-dia h4{
+  margin:0 0 7px;
+  font-size:.78rem;
+  color:#163a63;
+  text-transform:uppercase;
+}
+.agenda-item{
+  padding:5px 7px;
+  border-radius:10px;
+  font-size:.68rem;
+  font-weight:700;
+  margin-bottom:5px;
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  line-height:1.18;
+}
+.agenda-fabiola{
+  background:#eef4ff;
+  color:#1e5ea8;
+}
+.agenda-asmirian{
+  background:#f3e8ff;
+  color:#7c3aed;
+}
+
+</style>
+
+<style>
+/* ✨ Upgrade final: encabezados de días más vivos + contador circular */
+#agendaSemanal{background:linear-gradient(135deg, rgba(255,255,255,.98), rgba(232,243,255,.95));border:1px solid rgba(199,216,255,.9);}
+.agenda-dia{border-radius:18px !important;padding:8px !important;min-width:155px !important;max-width:178px !important;flex:0 0 155px !important;border:1px solid rgba(199,216,255,.95) !important;box-shadow:0 12px 24px rgba(17,35,72,.08) !important;background:linear-gradient(180deg,#ffffff,#f5f9ff) !important;}
+.agenda-dia h4{margin:0 0 8px !important;padding:7px 8px !important;border-radius:13px !important;display:flex !important;align-items:center !important;justify-content:space-between !important;gap:7px !important;font-size:.70rem !important;font-weight:950 !important;letter-spacing:.075em !important;text-transform:uppercase !important;color:#ffffff !important;box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 8px 16px rgba(17,35,72,.10) !important;}
+.agenda-dia h4 span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.agenda-count{width:24px !important;height:24px !important;min-width:24px !important;padding:0 !important;border-radius:999px !important;display:inline-flex !important;align-items:center !important;justify-content:center !important;background:#ffffff !important;color:#163a63 !important;border:2px solid rgba(255,255,255,.95) !important;font-size:.72rem !important;font-weight:1000 !important;box-shadow:0 5px 12px rgba(17,35,72,.18) !important;}
+.agenda-lunes h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-martes h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-miercoles h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-jueves h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-viernes h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-sabado h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-domingo h4{background:linear-gradient(135deg,#102f55,#1e7bff) !important;}
+.agenda-hoy{border:2px solid #12365f !important;box-shadow:0 18px 38px rgba(30,94,168,.25), 0 0 0 5px rgba(30,94,168,.12) !important;transform:translateY(-2px);}
+.agenda-hoy h4{background:linear-gradient(135deg,#082744,#0f5bd8) !important;}
+.agenda-hoy .agenda-count{color:#0f3f78 !important;transform:scale(1.06);}
+.agenda-hoy h4::before{content:"HOY";font-size:.50rem;color:#163a63;background:#ffffff;border-radius:999px;padding:3px 6px;margin-right:2px;box-shadow:0 4px 10px rgba(17,35,72,.18);flex:0 0 auto;}
+@media (max-width:720px){.agenda-dia{min-width:150px !important;flex-basis:150px !important;max-width:168px !important;}.agenda-dia h4{font-size:.66rem !important;padding:7px !important;}.agenda-count{width:23px !important;height:23px !important;min-width:23px !important;}}
 </style>
 
 </head>
@@ -492,6 +675,17 @@
       </h1>
       <p class="subtitle"><span class="dayana-name">Dayana</span></p>
     </section>
+
+<section class="card" id="agendaSemanal" style="margin-top:18px;">
+  <h2 style="color:#1e5ea8; margin-bottom:14px;">📅 Plan Semanal</h2>
+  <div id="agendaGrid" style="
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding-bottom:8px;
+    -webkit-overflow-scrolling:touch;
+  "></div>
+</section>
 
     <div class="top-grid">
       <section class="card">
@@ -1491,6 +1685,7 @@
           await setDoc(doc(db, "piscinas", actual.id), actual);
           registros[idx] = actual;
           render();
+      renderAgenda();
         }
       }
 
@@ -2278,7 +2473,61 @@
       $("historialExtrasModal").showModal();
     }
 
-    function render(){
+    
+
+function normalizar(txt){
+  return (txt||"").toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+}
+
+function renderAgenda(){
+  const diasSemana = ["lunes","martes","miercoles","jueves","viernes","sabado","domingo"];
+  const agenda = {lunes:[],martes:[],miercoles:[],jueves:[],viernes:[],sabado:[],domingo:[]};
+
+  registros.forEach(r => {
+    const diasTexto = normalizar(r.diasVisitas);
+
+    diasSemana.forEach(dia => {
+      if(diasTexto.includes(dia)){
+        agenda[dia].push(r);
+      }
+    });
+  });
+
+  const nombres = {
+    lunes:"LUNES", martes:"MARTES", miercoles:"MIÉRCOLES",
+    jueves:"JUEVES", viernes:"VIERNES", sabado:"SÁBADO", domingo:"DOMINGO"
+  };
+
+  const grid = document.getElementById("agendaGrid");
+  if(!grid) return;
+
+  const hoyIndex = (new Date().getDay() + 6) % 7; // lunes=0, domingo=6
+  const hoyDia = diasSemana[hoyIndex];
+
+  grid.innerHTML = diasSemana.map(dia => {
+    const lista = agenda[dia];
+    const esHoy = dia === hoyDia;
+    return `
+      <div class="agenda-dia agenda-${dia} ${esHoy ? "agenda-hoy" : ""}">
+        <h4><span>${nombres[dia]}</span><span class="agenda-count">${lista.length}</span></h4>
+        ${
+          lista.length
+          ? lista.map(r => `
+            <div class="agenda-item ${r.empleada === "Fabiola" ? "agenda-fabiola" : "agenda-asmirian"}">
+              <span class="agenda-piscina-nombre">${escapeHtml(r.nombrePiscina)}</span>
+              <span class="agenda-empleada-mini">${escapeHtml(r.empleada)}</span>
+            </div>
+          `).join("")
+          : `<div class="agenda-empty">Sin visitas</div>`
+        }
+      </div>
+    `;
+  }).join("");
+}
+
+
+function render(){
       const q = $("searchInput").value.trim().toLowerCase();
       const empleadoFiltro = $("filterEmpleado").value;
 
@@ -2420,6 +2669,7 @@
     onSnapshot(collection(db, "piscinas"), (snapshot) => {
       registros = snapshot.docs.map(d => d.data());
       render();
+      renderAgenda();
       renderResumenMes();
       loadCierreMes();
       programarBackupAutomatico();
